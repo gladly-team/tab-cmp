@@ -13,20 +13,10 @@
     "build:src": "babel src --out-dir build --ignore \"src/**/__tests__/*\",\"src/**/__mocks__/*\"",
     "lint": "eslint ./src/",
     "test": "npm-run-all -s lint test:coverage coverage",
-    "test:run": "jest --env=jsdom --testPathIgnorePatterns=prebidPatches",
+    "test:run": "jest --env=jsdom",
     "test:coverage": "yarn run test:run --coverage",
     "test:watch": "yarn run test:run --watch",
     "coverage": "if-env LOG_TEST_COVERAGE=true && codecov || echo 'Skipping test coverage logging.'",
-    "prebid:build": "npm-run-all -s prebid:build:explanation prebid:apply-patches prebid:install prebid:generate prebid:cp",
-    "prebid:build:explanation": "echo \"Building Prebid. We apply any of our patches to the prebid.js module, build it from source, and keep the build Prebid JS in source control.\"",
-    "prebid:apply-patches": "patch-package",
-    "prebid:install": "cd ./node_modules/prebid.js/ && yarn install",
-    "prebid:generate": "cd ./node_modules/prebid.js/ && ./node_modules/gulp/bin/gulp.js build  --modules \"../../src/providers/prebid/modules.json\"",
-    "prebid:cp": "echo \"/* eslint-disable */\" > ./src/providers/prebid/built/pb.js && cat ./node_modules/prebid.js/build/dist/prebid.js >> ./src/providers/prebid/built/pb.js",
-    "prebid:create-patches": "yarn patch-package prebid.js --include '^(src|modules)/'",
-    "prebid:test-patches": "npm-run-all -s prebid:test-patches:explanation \"prebid:test-patches:run {1}\" --",
-    "prebid:test-patches:run": "jest test --env=jsdom --testMatch **/**/prebidPatches*",
-    "prebid:test-patches:explanation": "echo \"Testing Prebid patches. Be sure to run prebid:install first.\"",
     "dev:publish": "npm-run-all -s build dev:yalc-publish-push",
     "dev:yalc-publish-push": "yalc publish --push"
   },
@@ -35,9 +25,6 @@
     "@babel/core": "^7.10.5",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
-    "@babel/preset-react": "^7.10.4",
-    "@testing-library/jest-dom": "^5.11.1",
-    "@testing-library/react": "^10.4.7",
     "babel-jest": "^26.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "codecov": "^3.7.2",
@@ -54,26 +41,17 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "if-env": "^1.0.4",
     "jest": "^26.1.0",
-    "jsdom": "^16.3.0",
-    "mockdate": "^3.0.2",
     "npm-run-all": "^4.1.5",
-    "patch-package": "^6.2.2",
-    "prebid.js": "^4.0.0",
     "prettier": "^2.0.5",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "regenerator-runtime": "^0.13.7"
   },
-  "dependencies": {
-    "lodash": "^4.17.15"
-  },
+  "dependencies": {},
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx}",
+      "src/**/*.{js}",
       "!**/__mocks__/**",
-      "!**/__tests__/**",
-      "!src/providers/prebid/built/**"
+      "!**/__tests__/**"
     ],
     "modulePaths": [
       "<rootDir>/"
@@ -84,13 +62,6 @@
     "testPathIgnorePatterns": [
       "<rootDir>[/\\\\](build|dist|docs|node_modules)[/\\\\]"
     ],
-    "testEnvironment": "node",
-    "transformIgnorePatterns": [
-      "<rootDir>/node_modules/(?!(prebid.js)/)"
-    ]
-  },
-  "peerDependencies": {
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "testEnvironment": "node"
   }
 }

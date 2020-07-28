@@ -1,16 +1,8 @@
 {
   "extends": ["airbnb", "prettier", "plugin:jest/recommended"],
-  "plugins": ["prettier", "react-hooks", "jest"],
+  "plugins": ["prettier", "jest"],
   "rules": {
-    "global-require": 0,
-    "no-underscore-dangle": 0,
-    "prettier/prettier": "error",
-    "react/no-unescaped-entities": 0,
-    "react/jsx-filename-extension": 0,
-    "react/jsx-one-expression-per-line": 0,
-    "import/no-extraneous-dependencies": 0,
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "global-require": 0
   },
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -26,6 +18,9 @@
       "alias": [
         ["src", "./src"]
       ]
+    },
+    "react": {
+      "version": "latest"
     }
   }
 }
