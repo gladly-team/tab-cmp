@@ -2,6 +2,7 @@ module.exports = {
   extends: ['airbnb', 'prettier', 'plugin:jest/recommended'],
   plugins: ['prettier', 'jest'],
   rules: {
+    'prettier/prettier': 'error',
     'global-require': 0,
   },
   overrides: [
