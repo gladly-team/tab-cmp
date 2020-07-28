@@ -1,6 +1,3 @@
-
 export const getCMPHeadScript = () => {}
 
-export const initializeCMP = () => {
-  
-}
+export const initializeCMP = () => {}

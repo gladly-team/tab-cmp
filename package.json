@@ -12,6 +12,7 @@
     "build:clean": "rm -rf ./build",
     "build:src": "babel src --out-dir build --ignore \"src/**/__tests__/*\",\"src/**/__mocks__/*\"",
     "lint": "eslint ./src/",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "test": "npm-run-all -s lint test:coverage coverage",
     "test:run": "jest --env=jsdom",
     "test:coverage": "yarn run test:run --coverage",
