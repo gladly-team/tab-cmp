@@ -6,7 +6,7 @@ module.exports = {
     '!src/qcCmpModified.js',
   ],
   coverageDirectory: './coverage/',
-  // modulePaths: ['<rootDir>/'],
+  modulePaths: ['<rootDir>/'],
   setupFilesAfterEnv: ['<rootDir>/src/jestSetup.js'],
   testEnvironment: 'node',
   testPathIgnorePatterns: [
@@ -17,11 +17,12 @@ module.exports = {
     '<rootDir>/quantcast/',
     '<rootDir>/.yalc/',
   ],
-  // transformIgnorePatterns: [
-  //   '/node_modules/',
-  //   '/.yalc/',
-  //   '^.+\\.module\\.(css|sass|scss)$',
-  //   '/quantcast/',
-  //   '/src/qcCmpModified.js',
-  // ],
+  transformIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/build/',
+    '<rootDir>/coverage/',
+    '<rootDir>/.git/',
+    '<rootDir>/quantcast/',
+    '<rootDir>/.yalc/',
+  ],
 }
