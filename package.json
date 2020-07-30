@@ -54,22 +54,5 @@
     "prop-types": "^15.7.2",
     "regenerator-runtime": "^0.13.7"
   },
-  "dependencies": {},
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**",
-      "!**/__mocks__/**",
-      "!**/__tests__/**"
-    ],
-    "modulePaths": [
-      "<rootDir>/"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/jestSetup.js"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>[/\\\\](build|dist|docs|node_modules)[/\\\\]"
-    ],
-    "testEnvironment": "node"
-  }
+  "dependencies": {}
 }
