@@ -1,3 +1,5 @@
+import initCMP from 'src/initCMP'
+
 export const getCMPHeadScript = () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: getCMPHeadScript`)
@@ -8,6 +10,7 @@ export const initializeCMP = (options) => {
   console.log(
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
+  initCMP()
 }
 
 export const doesGDPRApply = async () => {
