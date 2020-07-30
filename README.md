@@ -6,6 +6,14 @@
 
 A wrapper for the Consent Management Platform used on [Tab for a Cause](https://github.com/gladly-team/tab)
 
-## Overview
+## Get Started
 
-TODO
+TODO: how to add this to a project
+
+## API
+
+TODO: methods
+
+## Developing & Updating
+
+TODO: info on what we changed in the CMP and how to update it
