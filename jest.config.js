@@ -6,6 +6,7 @@ module.exports = {
     '!src/qcCmpModified.js',
   ],
   coverageDirectory: './coverage/',
+  modulePaths: ['<rootDir>/'],
   setupFilesAfterEnv: ['<rootDir>/src/jestSetup.js'],
   testEnvironment: 'node',
   testPathIgnorePatterns: [
