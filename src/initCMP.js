@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle:0, no-useless-concat:0, eqeqeq:0 */
 
-// TODO: require our modified cmp.js
+require('src/qcCmpModified')
 
 const setUpQuantcastChoice = () => {
   // First section of QC Choice JS.
