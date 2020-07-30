@@ -18,6 +18,12 @@
     "test:coverage": "yarn run test:run --coverage",
     "test:watch": "yarn run test:run --watch",
     "coverage": "if-env LOG_TEST_COVERAGE=true && codecov || echo 'Skipping test coverage logging.'",
+    "quantcast:update": "npm-run-all -s quantcast:update:info quantcast:choice-js:update quantcast:cmp-js:download",
+    "quantcast:update:info": "echo \"########## Downloading the original source JS for Quantcast Choice version 7. To use a different version, modify the version number in the package.json scripts.##########\"",
+    "quantcast:choice-js:update": "npm-run-all -s quantcast:choice-js:download quantcast:choice-js:format",
+    "quantcast:choice-js:download": "curl https://quantcast.mgr.consensu.org/choice/FPBLJYpJgR9Zu/dev-tab2017.gladly.io/choice.js > ./quantcast/qcChoiceOriginal.js",
+    "quantcast:choice-js:format": "eslint ./quantcast/qcChoiceOriginal.js --fix --no-ignore; exit 0",
+    "quantcast:cmp-js:download": "curl https://quantcast.mgr.consensu.org/tcfv2/7/cmp2.js > ./quantcast/qcCmpOriginal.js",
     "dev:publish": "npm-run-all -s build dev:yalc-publish-push",
     "dev:yalc-publish-push": "yalc publish --push"
   },
