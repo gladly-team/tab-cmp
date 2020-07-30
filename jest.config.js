@@ -11,10 +11,11 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: [
     '/node_modules/',
-    '/build/',
-    '/.yalc/',
-    '/.git/',
-    '/quantcast/',
+    '<rootDir>/build/',
+    '<rootDir>/coverage/',
+    '<rootDir>/.git/',
+    '<rootDir>/quantcast/',
+    '<rootDir>/.yalc/',
   ],
   // transformIgnorePatterns: [
   //   '/node_modules/',
