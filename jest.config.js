@@ -9,13 +9,13 @@ module.exports = {
   // modulePaths: ['<rootDir>/'],
   setupFilesAfterEnv: ['<rootDir>/src/jestSetup.js'],
   testEnvironment: 'node',
-  // testPathIgnorePatterns: [
-  //   '/node_modules/',
-  //   '/build/',
-  //   '/.yalc/',
-  //   '/.git/',
-  //   '/quantcast/',
-  // ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/build/',
+    '/.yalc/',
+    '/.git/',
+    '/quantcast/',
+  ],
   // transformIgnorePatterns: [
   //   '/node_modules/',
   //   '/.yalc/',
