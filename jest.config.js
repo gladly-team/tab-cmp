@@ -1,8 +1,8 @@
 module.exports = {
   collectCoverageFrom: [
-    'src/**',
+    'src/**/*.{js}',
     '!**/__mocks__/**',
-    '!**/__tests__/**',
+    '!**/node_modules/**',
     '!src/qcCmpModified.js',
   ],
   coverageDirectory: './coverage/',
@@ -15,7 +15,6 @@ module.exports = {
     '/.yalc/',
     '/.git/',
     '/quantcast/',
-    '/src/qcCmpModified.js',
   ],
   transformIgnorePatterns: [
     '/node_modules/',
