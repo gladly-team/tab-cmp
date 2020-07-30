@@ -50,7 +50,7 @@
   "dependencies": {},
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js}",
+      "src/**",
       "!**/__mocks__/**",
       "!**/__tests__/**"
     ],
