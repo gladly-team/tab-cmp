@@ -1,7 +1,5 @@
 /* eslint no-underscore-dangle:0, no-useless-concat:0, eqeqeq:0 */
 
-require('src/qcCmpModified')
-
 const setUpQuantcastChoice = () => {
   // First section of QC Choice JS.
   // Modified: remove script tag creation for CMP JS. We load
@@ -142,8 +140,14 @@ const initCMP = (options = {}) => {
 
   const language = getLanguage()
 
+  // Modified: run the modified CMP JS code only after Quantcast
+  // Choice initializes.
+  const afterCMPInit = () => {
+    require('src/qcCmpModified')
+  }
+
   // TODO: support customizations
-  window.__tcfapi('init', 2, () => {}, {
+  window.__tcfapi('init', 2, afterCMPInit, {
     premiumProperties: {},
     coreUiLabels: {},
     premiumUiLabels: {
