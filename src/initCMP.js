@@ -138,21 +138,15 @@ const initCMP = (options = {}) => {
 
   setUpQuantcastChoice()
 
-  const language = getLanguage()
-
+  // FIXME
   // TODO: look at scopes of variables in original and make
   // sure we didn't break something.
+  require('src/qcCmpModified')
 
-  // FIXME: this doesn't work, because we need it to set the
-  // __uspapi and __tcfapi functions.
-  // Modified: run the modified CMP JS code only after Quantcast
-  // Choice initializes.
-  const afterCMPInit = () => {
-    require('src/qcCmpModified')
-  }
+  const language = getLanguage()
 
   // TODO: support customizations
-  window.__tcfapi('init', 2, afterCMPInit, {
+  window.__tcfapi('init', 2, () => {}, {
     premiumProperties: {},
     coreUiLabels: {},
     premiumUiLabels: {
