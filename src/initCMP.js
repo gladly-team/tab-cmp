@@ -140,6 +140,11 @@ const initCMP = (options = {}) => {
 
   const language = getLanguage()
 
+  // TODO: look at scopes of variables in original and make
+  // sure we didn't break something.
+
+  // FIXME: this doesn't work, because we need it to set the
+  // __uspapi and __tcfapi functions.
   // Modified: run the modified CMP JS code only after Quantcast
   // Choice initializes.
   const afterCMPInit = () => {
