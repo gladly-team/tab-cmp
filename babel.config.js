@@ -21,4 +21,7 @@ module.exports = {
       },
     ],
   ],
+  // This is critical to not break any global scope set by
+  // the original QC cmp2.js.
+  exclude: ['**/qcCmpModified.js'],
 }

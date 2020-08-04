@@ -138,11 +138,6 @@ const initCMP = (options = {}) => {
 
   setUpQuantcastChoice()
 
-  // FIXME
-  // TODO: look at scopes of variables in original and make
-  // sure we didn't break something.
-  require('src/qcCmpModified')
-
   const language = getLanguage()
 
   // TODO: support customizations
@@ -190,6 +185,10 @@ const initCMP = (options = {}) => {
       suppressCcpaLinks: true,
     },
   })
+
+  // Important: the CMP JS apparently must load after the
+  // initial call to __tcfapi above.
+  require('src/qcCmpModified')
 }
 
 export default initCMP
