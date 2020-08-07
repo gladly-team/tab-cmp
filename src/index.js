@@ -18,8 +18,21 @@ export const initializeCMP = (options) => {
   // TODO: move to separate module
   // TODO: add to head tag
   window.tabCMP = window.tabCMP || {}
-  window.tabCMP.doesGDPRApply = window.tabCMP.doesGDPRApply || isUserInEU
-  window.tabCMP.doesCCPAApply = window.tabCMP.doesCCPAApply || isUserInUS
+
+  // Only set doesGDPRApply and doesCCPAApply if they're not
+  // already defined.
+  window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
+    window.tabCMP,
+    'doesGDPRApply'
+  )
+    ? window.tabCMP.doesGDPRApply
+    : isUserInEU
+  window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
+    window.tabCMP,
+    'doesCCPAApply'
+  )
+    ? window.tabCMP.doesCCPAApply
+    : isUserInUS
 
   initCMP()
 
