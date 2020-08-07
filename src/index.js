@@ -10,6 +10,17 @@ export const initializeCMP = (options) => {
   console.log(
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
+
+  // TODO: use geoip service
+  const isUserInEU = false
+  const isUserInUS = true
+
+  // TODO: move to separate module
+  // TODO: add to head tag
+  window.tabCMP = window.tabCMP || {}
+  window.tabCMP.doesGDPRApply = window.tabCMP.doesGDPRApply || isUserInEU
+  window.tabCMP.doesCCPAApply = window.tabCMP.doesCCPAApply || isUserInUS
+
   initCMP()
 
   // TODO: move into separate module.
