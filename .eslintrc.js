@@ -4,6 +4,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'global-require': 0,
+    'no-underscore-dangle': 0,
   },
   overrides: [
     // Set Jest rules only for test files.
