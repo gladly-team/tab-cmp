@@ -50,7 +50,7 @@ const getMockMaxMindResponse = (
 })
 
 const mockGeoIP = {
-  country: jest.fn((successCallback, failureCallback) =>
+  country: jest.fn((successCallback) =>
     successCallback(getMockMaxMindResponse())
   ),
 }
@@ -61,8 +61,8 @@ beforeAll(() => {
 })
 
 afterEach(() => {
-  const { __mockClear } = require('src/localStorageMgr')
-  __mockClear()
+  const localStorageMgr = require('src/localStorageMgr').default
+  localStorageMgr.clear()
   jest.clearAllMocks()
 
   // Because client-location.js stores location in memory

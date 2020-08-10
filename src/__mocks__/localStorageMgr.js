@@ -2,11 +2,6 @@ import { isNil } from 'src/utils'
 
 let mockStorage = {}
 
-// TODO: remove
-export const __mockClear = () => {
-  mockStorage = {}
-}
-
 export default {
   getItem: jest.fn((key) => {
     return mockStorage[key]
@@ -20,6 +15,6 @@ export default {
     delete mockStorage[key]
   }),
   clear: () => {
-    __mockClear()
+    mockStorage = {}
   },
 }
