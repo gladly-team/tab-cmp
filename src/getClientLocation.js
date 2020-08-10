@@ -21,7 +21,7 @@ const STORAGE_PREFIX = 'tabCMP'
 const STORAGE_CLIENT_LOCATION_PREFIX = 'clientLocation'
 const makeStorageKey = (keyName) =>
   `${STORAGE_PREFIX}.${STORAGE_CLIENT_LOCATION_PREFIX}.${keyName}`
-const STORAGE_COUNTRY_ISO_CODE = makeStorageKey('countryIsoCode')
+const STORAGE_COUNTRY_ISO_CODE = makeStorageKey('countryISOCode')
 const STORAGE_IS_IN_EU = makeStorageKey('isInEU')
 const STORAGE_QUERY_TIME = makeStorageKey('queryTime')
 
@@ -33,9 +33,10 @@ let location = null
 // more than once.
 let locationFetchPromise = null
 
-function ClientLocation(countryIsoCode, isInEuropeanUnion, queryTime) {
-  this.countryIsoCode = countryIsoCode
+function ClientLocation(countryISOCode, isInEuropeanUnion, queryTime) {
+  this.countryISOCode = countryISOCode
   this.isInEuropeanUnion = isInEuropeanUnion
+  // this.isInUS = countryISOCode === 'US'
 
   // An ISO string
   this.queryTime = queryTime
@@ -178,7 +179,7 @@ const getLocationFromLocalStorage = () => {
 const setLocationInLocalStorage = (userClientLocation) => {
   localStorageMgr.setItem(
     STORAGE_COUNTRY_ISO_CODE,
-    userClientLocation.countryIsoCode
+    userClientLocation.countryISOCode
   )
   localStorageMgr.setItem(
     STORAGE_IS_IN_EU,
@@ -188,12 +189,12 @@ const setLocationInLocalStorage = (userClientLocation) => {
 }
 
 /**
- * Return client's location. Try to get the location data from memory;
+ * Return the client's location. Try to get the location data from memory;
  * fall back to localStorage; then fall back to querying MaxMind for
  * new location data. Throw an error if we cannot determine location.
  * @return {Promise<ClientLocation>} The client's location
  */
-const getLocation = async () => {
+const getClientLocation = async () => {
   // Only fetch location if we haven't already.
   if (!location) {
     // Try to get the location data from localStorage.
@@ -207,10 +208,10 @@ const getLocation = async () => {
       try {
         maxMindLocation = await getLocationFromMaxMind()
       } catch (e) {
-        throw new Error('Could not determine location.')
+        throw new Error('Could not determine client location.')
       }
       if (!maxMindLocation) {
-        throw new Error('Could not determine location.')
+        throw new Error('Could not determine client location.')
       }
 
       // Save the location to localStorage and return it.
@@ -221,31 +222,4 @@ const getLocation = async () => {
   return location
 }
 
-/**
- * Return the ISO 3166-1 country code of the country the client is in.
- * Throw an error if we could not determine the country.
- * See ISO codes: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
- * @return {Promise<string>} The two-character ISO 3166-1 country code
- */
-export const getCountry = async () => {
-  try {
-    const clientLocation = await getLocation()
-    return clientLocation.countryIsoCode
-  } catch (e) {
-    throw new Error('Could not determine client location country.')
-  }
-}
-
-/**
- * Return whether the client is in the European Union.
- * Throw an error if we could not determine the country.
- * @return {Promise<Boolean>} Whether or not the client is in the EU
- */
-export const isInEuropeanUnion = async () => {
-  try {
-    const clientLocation = await getLocation()
-    return clientLocation.isInEuropeanUnion
-  } catch (e) {
-    throw new Error('Could not determine client location EU membership.')
-  }
-}
+export default getClientLocation

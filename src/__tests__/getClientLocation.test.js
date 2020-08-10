@@ -8,7 +8,7 @@ jest.mock('src/localStorageMgr')
 const mockNow = '2018-05-15T10:30:00.000'
 
 // Local storage keys.
-const STORAGE_LOCATION_COUNTRY_ISO_CODE = 'tabCMP.clientLocation.countryIsoCode'
+const STORAGE_LOCATION_COUNTRY_ISO_CODE = 'tabCMP.clientLocation.countryISOCode'
 const STORAGE_LOCATION_IS_IN_EU = 'tabCMP.clientLocation.isInEU'
 const STORAGE_LOCATION_QUERY_TIME = 'tabCMP.clientLocation.queryTime'
 
@@ -77,9 +77,9 @@ afterAll(() => {
 describe('client-location', () => {
   it('calls MaxMind when location is not in localStorage or memory', async () => {
     expect.assertions(2)
-    const { getCountry } = require('src/getClientLocation')
-    const returnedVal = await getCountry()
-    expect(returnedVal).toBe('US')
+    const getClientLocation = require('src/getClientLocation').default
+    const { countryISOCode } = await getClientLocation()
+    expect(countryISOCode).toBe('US')
     expect(mockGeoIP.country).toHaveBeenCalled()
   })
 
@@ -92,9 +92,9 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'true')
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
 
-    const { getCountry } = require('src/getClientLocation')
-    const returnedVal = await getCountry()
-    expect(returnedVal).toBe('DE')
+    const getClientLocation = require('src/getClientLocation').default
+    const { countryISOCode } = await getClientLocation()
+    expect(countryISOCode).toBe('DE')
     expect(mockGeoIP.country).not.toHaveBeenCalled()
   })
 
@@ -110,9 +110,9 @@ describe('client-location', () => {
       '2018-02-10T09:00:00.000'
     ) // expired
 
-    const { getCountry } = require('src/getClientLocation')
-    const returnedVal = await getCountry()
-    expect(returnedVal).toBe('US')
+    const getClientLocation = require('src/getClientLocation').default
+    const { countryISOCode } = await getClientLocation()
+    expect(countryISOCode).toBe('US')
     expect(mockGeoIP.country).toHaveBeenCalledTimes(1)
   })
 
@@ -128,9 +128,9 @@ describe('client-location', () => {
       '2018-04-21T09:00:00.000'
     ) // not yet expired
 
-    const { getCountry } = require('src/getClientLocation')
-    const returnedVal = await getCountry()
-    expect(returnedVal).toBe('CA')
+    const getClientLocation = require('src/getClientLocation').default
+    const { countryISOCode } = await getClientLocation()
+    expect(countryISOCode).toBe('CA')
     expect(mockGeoIP.country).not.toHaveBeenCalled()
   })
 
@@ -142,15 +142,15 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_COUNTRY_ISO_CODE, 'DE')
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
 
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
     expect(mockGeoIP.country).toHaveBeenCalledTimes(1)
   })
 
   it('stores the location result in localStorage after calling MaxMind', async () => {
     expect.assertions(3)
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
 
     // Check that localStorage has the correct values
     const localStorageMgr = require('src/localStorageMgr').default
@@ -169,8 +169,8 @@ describe('client-location', () => {
       // Mock that MaxMind says the location is Germany
       return successCallback(getMockMaxMindResponse('DE', true))
     })
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
 
     // Check that localStorage has the correct values
     const localStorageMgr = require('src/localStorageMgr').default
@@ -193,28 +193,28 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
     jest.clearAllMocks()
 
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
 
     expect(localStorageMgr.setItem).not.toHaveBeenCalled()
   })
 
   it('only calls MaxMind once, even with multiple simultaneous location calls', async () => {
     expect.assertions(1)
-    const { getCountry } = require('src/getClientLocation')
-    getCountry()
-    getCountry()
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation()
+    getClientLocation()
+    await getClientLocation()
     expect(mockGeoIP.country).toHaveBeenCalledTimes(1)
   })
 
   it('does not call MaxMind more then once, because the location should be in memory', async () => {
     expect.assertions(2)
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
     expect(mockGeoIP.country).toHaveBeenCalledTimes(1)
     jest.clearAllMocks()
-    await getCountry()
+    await getClientLocation()
     expect(mockGeoIP.country).not.toHaveBeenCalled()
   })
 
@@ -227,32 +227,30 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'true')
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
 
-    const { getCountry } = require('src/getClientLocation')
-    await getCountry()
+    const getClientLocation = require('src/getClientLocation').default
+    await getClientLocation()
     expect(localStorageMgr.getItem).toHaveBeenCalled()
     jest.clearAllMocks()
-    await getCountry()
+    await getClientLocation()
     expect(localStorageMgr.getItem).not.toHaveBeenCalled()
   })
 
   it('returns expected value for isInEuropeanUnion when it is false (via MaxMind)', async () => {
     expect.assertions(1)
-    const { isInEuropeanUnion } = require('src/getClientLocation')
-    const returnedVal = await isInEuropeanUnion()
-    expect(returnedVal).toBe(false)
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(false)
   })
 
   it('returns expected value for isInEuropeanUnion when it is true (via MaxMind)', async () => {
     expect.assertions(1)
-    mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        // Mock that MaxMind says the location is Germany
-        return successCallback(getMockMaxMindResponse('DE', true))
-      }
-    )
-    const { isInEuropeanUnion } = require('src/getClientLocation')
-    const returnedVal = await isInEuropeanUnion()
-    expect(returnedVal).toBe(true)
+    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+      // Mock that MaxMind says the location is Germany
+      return successCallback(getMockMaxMindResponse('DE', true))
+    })
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(true)
   })
 
   it('returns expected value for isInEuropeanUnion when it is false (via localStorage)', async () => {
@@ -264,9 +262,9 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'false')
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
 
-    const { isInEuropeanUnion } = require('src/getClientLocation')
-    const returnedVal = await isInEuropeanUnion()
-    expect(returnedVal).toBe(false)
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(false)
   })
 
   it('returns expected value for isInEuropeanUnion when it is true (via localStorage)', async () => {
@@ -278,12 +276,12 @@ describe('client-location', () => {
     localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'true')
     localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
 
-    const { isInEuropeanUnion } = require('src/getClientLocation')
-    const returnedVal = await isInEuropeanUnion()
-    expect(returnedVal).toBe(true)
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(true)
   })
 
-  it('throws an error if MaxMind returns an error when trying to get country code', async () => {
+  it('throws an error if MaxMind returns an error when trying to get the client location', async () => {
     expect.assertions(1)
 
     // Suppress expected console error
@@ -296,28 +294,9 @@ describe('client-location', () => {
       }
     )
 
-    const { getCountry } = require('src/getClientLocation')
-    await expect(getCountry()).rejects.toThrow(
-      'Could not determine client location country'
-    )
-  })
-
-  it('throws an error if MaxMind returns an error when trying to get EU membership status', async () => {
-    expect.assertions(1)
-
-    // Suppress expected console error
-    jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-
-    // Mock a MaxMind error
-    mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        return failureCallback({ code: 'BAD_THING_HAPPENED' })
-      }
-    )
-
-    const { isInEuropeanUnion } = require('src/getClientLocation')
-    await expect(isInEuropeanUnion()).rejects.toThrow(
-      'Could not determine client location EU membership'
+    const getClientLocation = require('src/getClientLocation').default
+    await expect(getClientLocation()).rejects.toThrow(
+      'Could not determine client location.'
     )
   })
 
@@ -337,9 +316,9 @@ describe('client-location', () => {
   //       }
   //     )
   //
-  //     const { getCountry } = require('src/getClientLocation')
+  // const getClientLocation = require('src/getClientLocation').default
   //     try {
-  //       await getCountry()
+  //       await getClientLocation()
   //     } catch (e) {}
   //     expect(logger.error).not.toHaveBeenCalled()
   //   })
@@ -360,9 +339,9 @@ describe('client-location', () => {
   //       }
   //     )
   //
-  //     const { getCountry } = require('src/getClientLocation')
+  // const getClientLocation = require('src/getClientLocation').default
   //     try {
-  //       await getCountry()
+  //       await getClientLocation()
   //     } catch (e) {}
   //     expect(logger.error).toHaveBeenCalled()
   //   })
