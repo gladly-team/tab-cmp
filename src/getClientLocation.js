@@ -160,7 +160,7 @@ const getLocationFromLocalStorage = () => {
   }
 
   // If the location data is too old, return null.
-  const now = getCurrentISOString()
+  const now = new Date()
   const daysSinceLocationQuery = getNumDaysBetweenDates(now, queryTime)
   const LOCATION_EXPIRE_DAYS = 60
   if (daysSinceLocationQuery > LOCATION_EXPIRE_DAYS) {
