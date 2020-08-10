@@ -5,9 +5,9 @@
 import localStorageMgr from 'src/localStorageMgr'
 import {
   isNil,
-  getCurrentISOTimestamp,
-  getNumDaysBetweenDatetimes,
-  parseISOTimestamp,
+  getCurrentISOString,
+  getNumDaysBetweenDates,
+  ISOStringToDate,
 } from 'src/utils'
 
 // TODO: return ClientLocation object
@@ -111,7 +111,7 @@ const getLocationFromMaxMind = () => {
             new ClientLocation(
               data.country.iso_code,
               isInEuropeanUnion,
-              getCurrentISOTimestamp()
+              getCurrentISOString()
             )
           )
         },
@@ -144,22 +144,24 @@ const getLocationFromLocalStorage = () => {
   const countryCode = localStorageMgr.getItem(STORAGE_COUNTRY_ISO_CODE)
   const isInEuropeanUnionStr = localStorageMgr.getItem(STORAGE_IS_IN_EU)
   const queryTimeISO = localStorageMgr.getItem(STORAGE_QUERY_TIME)
-  const queryTime = parseISOTimestamp(queryTimeISO)
+  let queryTime
+  try {
+    queryTime = ISOStringToDate(queryTimeISO)
+  } catch (e) {
+    queryTime = null
+  }
   const isInEuropeanUnion = localStorageMgr.getItem(STORAGE_IS_IN_EU) === 'true'
 
   // If the location data does not exist, return null.
   const isDataValid =
-    !isNil(countryCode) &&
-    !isNil(isInEuropeanUnionStr) &&
-    !isNil(queryTime) &&
-    queryTime.isValid()
+    !isNil(countryCode) && !isNil(isInEuropeanUnionStr) && !isNil(queryTime) // null if the date is invalid
   if (!isDataValid) {
     return null
   }
 
   // If the location data is too old, return null.
-  const now = getCurrentISOTimestamp()
-  const daysSinceLocationQuery = getNumDaysBetweenDatetimes(now, queryTime)
+  const now = getCurrentISOString()
+  const daysSinceLocationQuery = getNumDaysBetweenDates(now, queryTime)
   const LOCATION_EXPIRE_DAYS = 60
   if (daysSinceLocationQuery > LOCATION_EXPIRE_DAYS) {
     return null

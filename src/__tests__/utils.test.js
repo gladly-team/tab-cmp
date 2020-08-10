@@ -43,18 +43,28 @@ describe('utils: isNil', () => {
   })
 })
 
-describe('utils: getCurrentISOTimestamp', () => {
+describe('utils: getCurrentISOString', () => {
   test('returns the expected value', () => {
     expect.assertions(1)
-    const { getCurrentISOTimestamp } = require('src/utils')
-    expect(getCurrentISOTimestamp()).toEqual('2019-12-24T14:32:01.000Z')
+    const { getCurrentISOString } = require('src/utils')
+    expect(getCurrentISOString()).toEqual('2019-12-24T14:32:01.000Z')
   })
 
   test('returns the expected value for another timestamp', () => {
     expect.assertions(1)
     MockDate.set('2020-03-10T00:00:01.000Z')
-    const { getCurrentISOTimestamp } = require('src/utils')
-    expect(getCurrentISOTimestamp()).toEqual('2020-03-10T00:00:01.000Z')
+    const { getCurrentISOString } = require('src/utils')
+    expect(getCurrentISOString()).toEqual('2020-03-10T00:00:01.000Z')
+  })
+})
+
+describe('utils: ISOStringToDate', () => {
+  test('works as expected', () => {
+    expect.assertions(1)
+    const { ISOStringToDate } = require('src/utils')
+    const ISOString = '2019-10-31T18:02:45.421Z' // UTC ms = 1572544965421
+    const expectedDate = new Date(1572544965421)
+    expect(ISOStringToDate(ISOString)).toEqual(expectedDate)
   })
 })
 
