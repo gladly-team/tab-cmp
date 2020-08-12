@@ -1,21 +1,28 @@
 import initCMP from 'src/initCMP'
+import getClientLocation from 'src/getClientLocation'
+
+// TODO: gracefully handle if this code is run on the
+// server side.
 
 export const getCMPHeadScript = () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: getCMPHeadScript`)
 }
 
-export const initializeCMP = (options) => {
+export const initializeCMP = async (options) => {
   // eslint-disable-next-line no-console
   console.log(
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
 
-  // TODO: use geoip service
-  const isUserInEU = false
-  const isUserInUS = true
+  // TODO: handle potential failure to fetch location
+  const { isInUS, isInEuropeanUnion } = await getClientLocation()
 
-  // TODO: move to separate module
+  // eslint-disable-next-line no-console
+  console.log(
+    `[tab-cmp] Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
+  )
+
   // TODO: add to head tag
   window.tabCMP = window.tabCMP || {}
 
@@ -26,13 +33,13 @@ export const initializeCMP = (options) => {
     'doesGDPRApply'
   )
     ? window.tabCMP.doesGDPRApply
-    : isUserInEU
+    : isInEuropeanUnion
   window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
     window.tabCMP,
     'doesCCPAApply'
   )
     ? window.tabCMP.doesCCPAApply
-    : isUserInUS
+    : isInUS
 
   initCMP()
 
