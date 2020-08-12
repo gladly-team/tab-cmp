@@ -5,7 +5,7 @@ import { isNil, getCurrentISOString } from 'src/utils'
 
 jest.mock('src/localStorageMgr')
 
-const mockNow = '2018-05-15T10:30:00.000'
+const mockNow = '2018-05-15T10:30:00.000Z'
 
 // Local storage keys.
 const STORAGE_LOCATION_COUNTRY_ISO_CODE = 'tabCMP.clientLocation.countryISOCode'
@@ -74,7 +74,89 @@ afterAll(() => {
   delete window.geoip2
 })
 
-describe('client-location', () => {
+describe('client-location: response data', () => {
+  it('returns the expected set of data', async () => {
+    expect.assertions(1)
+    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+      // Mock that MaxMind says the location is Germany
+      return successCallback(getMockMaxMindResponse('DE', true))
+    })
+    const getClientLocation = require('src/getClientLocation').default
+    const data = await getClientLocation()
+    expect(data).toEqual({
+      countryISOCode: 'DE',
+      isInEuropeanUnion: true,
+      queryTime: mockNow,
+    })
+  })
+
+  it('returns expected value for isInEuropeanUnion when it is false (via MaxMind)', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(false)
+  })
+
+  it('returns expected value for isInEuropeanUnion when it is true (via MaxMind)', async () => {
+    expect.assertions(1)
+    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+      // Mock that MaxMind says the location is Germany
+      return successCallback(getMockMaxMindResponse('DE', true))
+    })
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(true)
+  })
+
+  it('returns expected value for isInEuropeanUnion when it is false (via localStorage)', async () => {
+    expect.assertions(1)
+
+    // Location exists in localStorage
+    const localStorageMgr = require('src/localStorageMgr').default
+    localStorageMgr.setItem(STORAGE_LOCATION_COUNTRY_ISO_CODE, 'DE')
+    localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'false')
+    localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
+
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(false)
+  })
+
+  it('returns expected value for isInEuropeanUnion when it is true (via localStorage)', async () => {
+    expect.assertions(1)
+
+    // Location exists in localStorage
+    const localStorageMgr = require('src/localStorageMgr').default
+    localStorageMgr.setItem(STORAGE_LOCATION_COUNTRY_ISO_CODE, 'DE')
+    localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'true')
+    localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
+
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInEuropeanUnion } = await getClientLocation()
+    expect(isInEuropeanUnion).toBe(true)
+  })
+
+  it('throws an error if MaxMind returns an error when trying to get the client location', async () => {
+    expect.assertions(1)
+
+    // Suppress expected console error
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+
+    // Mock a MaxMind error
+    mockGeoIP.country.mockImplementationOnce(
+      (successCallback, failureCallback) => {
+        return failureCallback({ code: 'BAD_THING_HAPPENED' })
+      }
+    )
+
+    const getClientLocation = require('src/getClientLocation').default
+    await expect(getClientLocation()).rejects.toThrow(
+      'Could not determine client location.'
+    )
+  })
+})
+
+describe('client-location: requests and storage', () => {
   it('calls MaxMind when location is not in localStorage or memory', async () => {
     expect.assertions(2)
     const getClientLocation = require('src/getClientLocation').default
@@ -234,115 +316,53 @@ describe('client-location', () => {
     await getClientLocation()
     expect(localStorageMgr.getItem).not.toHaveBeenCalled()
   })
-
-  it('returns expected value for isInEuropeanUnion when it is false (via MaxMind)', async () => {
-    expect.assertions(1)
-    const getClientLocation = require('src/getClientLocation').default
-    const { isInEuropeanUnion } = await getClientLocation()
-    expect(isInEuropeanUnion).toBe(false)
-  })
-
-  it('returns expected value for isInEuropeanUnion when it is true (via MaxMind)', async () => {
-    expect.assertions(1)
-    mockGeoIP.country.mockImplementationOnce((successCallback) => {
-      // Mock that MaxMind says the location is Germany
-      return successCallback(getMockMaxMindResponse('DE', true))
-    })
-    const getClientLocation = require('src/getClientLocation').default
-    const { isInEuropeanUnion } = await getClientLocation()
-    expect(isInEuropeanUnion).toBe(true)
-  })
-
-  it('returns expected value for isInEuropeanUnion when it is false (via localStorage)', async () => {
-    expect.assertions(1)
-
-    // Location exists in localStorage
-    const localStorageMgr = require('src/localStorageMgr').default
-    localStorageMgr.setItem(STORAGE_LOCATION_COUNTRY_ISO_CODE, 'DE')
-    localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'false')
-    localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
-
-    const getClientLocation = require('src/getClientLocation').default
-    const { isInEuropeanUnion } = await getClientLocation()
-    expect(isInEuropeanUnion).toBe(false)
-  })
-
-  it('returns expected value for isInEuropeanUnion when it is true (via localStorage)', async () => {
-    expect.assertions(1)
-
-    // Location exists in localStorage
-    const localStorageMgr = require('src/localStorageMgr').default
-    localStorageMgr.setItem(STORAGE_LOCATION_COUNTRY_ISO_CODE, 'DE')
-    localStorageMgr.setItem(STORAGE_LOCATION_IS_IN_EU, 'true')
-    localStorageMgr.setItem(STORAGE_LOCATION_QUERY_TIME, getCurrentISOString())
-
-    const getClientLocation = require('src/getClientLocation').default
-    const { isInEuropeanUnion } = await getClientLocation()
-    expect(isInEuropeanUnion).toBe(true)
-  })
-
-  it('throws an error if MaxMind returns an error when trying to get the client location', async () => {
-    expect.assertions(1)
-
-    // Suppress expected console error
-    jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-
-    // Mock a MaxMind error
-    mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        return failureCallback({ code: 'BAD_THING_HAPPENED' })
-      }
-    )
-
-    const getClientLocation = require('src/getClientLocation').default
-    await expect(getClientLocation()).rejects.toThrow(
-      'Could not determine client location.'
-    )
-  })
-
-  // TODO
-  //  eslint-disable-next-line jest/no-commented-out-tests
-  //   it('does not log an error for a typical MaxMind error', async () => {
-  //     expect.assertions(1)
-  //     const logger = require('js/utils/logger').default
-  //
-  //     // Suppress expected console error
-  //     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-  //
-  //     // Mock a MaxMind error
-  //     mockGeoIP.country.mockImplementationOnce(
-  //       (successCallback, failureCallback) => {
-  //         return failureCallback({ code: 'HTTP_TIMEOUT' })
-  //       }
-  //     )
-  //
-  // const getClientLocation = require('src/getClientLocation').default
-  //     try {
-  //       await getClientLocation()
-  //     } catch (e) {}
-  //     expect(logger.error).not.toHaveBeenCalled()
-  //   })
-  //
-  //  eslint-disable-next-line jest/no-commented-out-tests
-  //   it('does log an error for a problematic MaxMind error', async () => {
-  //     expect.assertions(1)
-  //
-  //     const logger = require('js/utils/logger').default
-  //
-  //     // Suppress expected console error
-  //     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-  //
-  //     // Mock a MaxMind error
-  //     mockGeoIP.country.mockImplementationOnce(
-  //       (successCallback, failureCallback) => {
-  //         return failureCallback({ code: 'OUT_OF_QUERIES' })
-  //       }
-  //     )
-  //
-  // const getClientLocation = require('src/getClientLocation').default
-  //     try {
-  //       await getClientLocation()
-  //     } catch (e) {}
-  //     expect(logger.error).toHaveBeenCalled()
-  //   })
 })
+
+// TODO
+// eslint-disable-next-line jest/no-commented-out-tests
+// describe('client-location: isInEuropeanUnion', () => {
+// eslint-disable-next-line jest/no-commented-out-tests
+//   it('does not log an error for a typical MaxMind error', async () => {
+//     expect.assertions(1)
+//     const logger = require('js/utils/logger').default
+//
+//     // Suppress expected console error
+//     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+//
+//     // Mock a MaxMind error
+//     mockGeoIP.country.mockImplementationOnce(
+//       (successCallback, failureCallback) => {
+//         return failureCallback({ code: 'HTTP_TIMEOUT' })
+//       }
+//     )
+//
+// const getClientLocation = require('src/getClientLocation').default
+//     try {
+//       await getClientLocation()
+//     } catch (e) {}
+//     expect(logger.error).not.toHaveBeenCalled()
+//   })
+//
+//  eslint-disable-next-line jest/no-commented-out-tests
+//   it('does log an error for a problematic MaxMind error', async () => {
+//     expect.assertions(1)
+//
+//     const logger = require('js/utils/logger').default
+//
+//     // Suppress expected console error
+//     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+//
+//     // Mock a MaxMind error
+//     mockGeoIP.country.mockImplementationOnce(
+//       (successCallback, failureCallback) => {
+//         return failureCallback({ code: 'OUT_OF_QUERIES' })
+//       }
+//     )
+//
+// const getClientLocation = require('src/getClientLocation').default
+//     try {
+//       await getClientLocation()
+//     } catch (e) {}
+//     expect(logger.error).toHaveBeenCalled()
+//   })
+// })
