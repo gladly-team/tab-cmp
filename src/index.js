@@ -23,7 +23,6 @@ export const initializeCMP = async (options) => {
     `[tab-cmp] Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
   )
 
-  // TODO: add to head tag
   window.tabCMP = window.tabCMP || {}
 
   // Only set doesGDPRApply and doesCCPAApply if they're not
