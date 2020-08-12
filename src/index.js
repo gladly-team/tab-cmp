@@ -1,22 +1,34 @@
 import initCMP from 'src/initCMP'
+import getClientLocation from 'src/getClientLocation'
+
+// TODO: gracefully handle if this code is run on the
+// server side.
 
 export const getCMPHeadScript = () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: getCMPHeadScript`)
 }
 
-export const initializeCMP = (options) => {
+export const initializeCMP = async (options) => {
   // eslint-disable-next-line no-console
   console.log(
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
 
-  // TODO: use geoip service
-  const isUserInEU = false
-  const isUserInUS = true
+  let isInUS = false
+  let isInEuropeanUnion = false
+  try {
+    ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
+    // If client location determination fails, default to no GDPR/CCPA,
+    // which will fall back on IP geolocation in calls to ad partners.
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 
-  // TODO: move to separate module
-  // TODO: add to head tag
+  // eslint-disable-next-line no-console
+  console.log(
+    `[tab-cmp] Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
+  )
+
   window.tabCMP = window.tabCMP || {}
 
   // Only set doesGDPRApply and doesCCPAApply if they're not
@@ -26,13 +38,13 @@ export const initializeCMP = (options) => {
     'doesGDPRApply'
   )
     ? window.tabCMP.doesGDPRApply
-    : isUserInEU
+    : isInEuropeanUnion
   window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
     window.tabCMP,
     'doesCCPAApply'
   )
     ? window.tabCMP.doesCCPAApply
-    : isUserInUS
+    : isInUS
 
   initCMP()
 
