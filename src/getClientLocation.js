@@ -205,7 +205,9 @@ const getClientLocation = async () => {
       try {
         maxMindLocation = await getLocationFromMaxMind()
       } catch (e) {
-        throw new Error('Could not determine client location.')
+        throw new Error(
+          `Could not determine client location. Error: ${JSON.stringify(e)}`
+        )
       }
       if (!maxMindLocation) {
         throw new Error('Could not determine client location.')
