@@ -15,8 +15,14 @@ export const initializeCMP = async (options) => {
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
 
-  // TODO: handle potential failure to fetch location
-  const { isInUS, isInEuropeanUnion } = await getClientLocation()
+  let isInUS = false
+  let isInEuropeanUnion = false
+  try {
+    ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
+    // If client location determination fails, default to no GDPR/CCPA,
+    // which will fall back on IP geolocation in calls to ad partners.
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 
   // eslint-disable-next-line no-console
   console.log(

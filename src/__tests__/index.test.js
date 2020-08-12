@@ -87,6 +87,15 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     expect(window.tabCMP.doesCCPAApply).toBe(false)
   })
+
+  it('sets window.tabCMP.doesGDPRApply adn window.tabCMP.doesCCPAApply to false when the client location fails', async () => {
+    expect.assertions(2)
+    getClientLocation.mockRejectedValue(new Error('Uh oh.'))
+    const index = require('src/index')
+    await index.initializeCMP()
+    expect(window.tabCMP.doesGDPRApply).toBe(false)
+    expect(window.tabCMP.doesCCPAApply).toBe(false)
+  })
 })
 
 describe('index.js:', () => {
