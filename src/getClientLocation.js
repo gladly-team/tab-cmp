@@ -10,9 +10,6 @@ import {
   ISOStringToDate,
 } from 'src/utils'
 
-// TODO: return ClientLocation object
-// TODO: reconfigure ClientLocation object to include CCPA
-
 // TODO
 const logger = () => {}
 
@@ -36,7 +33,7 @@ let locationFetchPromise = null
 function ClientLocation(countryISOCode, isInEuropeanUnion, queryTime) {
   this.countryISOCode = countryISOCode
   this.isInEuropeanUnion = isInEuropeanUnion
-  // this.isInUS = countryISOCode === 'US'
+  this.isInUS = countryISOCode && countryISOCode.toUpperCase() === 'US'
 
   // An ISO string
   this.queryTime = queryTime

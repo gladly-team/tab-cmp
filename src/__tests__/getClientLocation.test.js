@@ -85,9 +85,21 @@ describe('client-location: response data', () => {
     const data = await getClientLocation()
     expect(data).toEqual({
       countryISOCode: 'DE',
+      isInUS: false,
       isInEuropeanUnion: true,
       queryTime: mockNow,
     })
+  })
+
+  it('sets isInUS to true when the countryISOCode is US', async () => {
+    expect.assertions(1)
+    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+      // Mock that MaxMind says the location is Germany
+      return successCallback(getMockMaxMindResponse('US', false))
+    })
+    const getClientLocation = require('src/getClientLocation').default
+    const { isInUS } = await getClientLocation()
+    expect(isInUS).toBe(true)
   })
 
   it('returns expected value for isInEuropeanUnion when it is false (via MaxMind)', async () => {
