@@ -1,6 +1,6 @@
 module.exports = {
   collectCoverageFrom: [
-    'src/**/*.{js}',
+    'src/**/*.js',
     '!**/__mocks__/**',
     '!**/node_modules/**',
     '!src/qcCmpModified.js',
