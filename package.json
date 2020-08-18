@@ -23,7 +23,7 @@
     "quantcast:choice-js:update": "npm-run-all -s quantcast:choice-js:download quantcast:choice-js:format",
     "quantcast:choice-js:download": "curl https://quantcast.mgr.consensu.org/choice/FPBLJYpJgR9Zu/tab.gladly.io/choice.js > ./quantcast/qcChoiceOriginal.js",
     "quantcast:choice-js:format": "eslint ./quantcast/qcChoiceOriginal.js --fix --no-ignore; exit 0",
-    "quantcast:cmp-js:download": "curl https://quantcast.mgr.consensu.org/tcfv2/7/cmp2.js > ./quantcast/qcCmpOriginal.js",
+    "quantcast:cmp-js:download": "curl https://quantcast.mgr.consensu.org/tcfv2/9/cmp2.js > ./quantcast/qcCmpOriginal.js",
     "quantcast:cmp-js:copy-with-edits": "sed -E 's/SameSite=Lax;secure/SameSite=None;secure/g; s/_isUserInUS=(true|false)/_isUserInUS=window.tabCMP.doesCCPAApply/g; s/_isUserInEU=(true|false)/_isUserInEU=window.tabCMP.doesGDPRApply/g' ./quantcast/qcCmpOriginal.js > ./src/qcCmpModified.js",
     "dev:publish": "npm-run-all -s build dev:yalc-publish-push",
     "dev:yalc-publish-push": "yalc publish --push"
