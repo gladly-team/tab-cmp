@@ -20,6 +20,7 @@ const requireCMPInitialized = (func) => (args) => {
   return func(args)
 }
 
+// TODO: try/catch all code here.
 // TODO: gracefully handle if this code is run on the
 // server side.
 
