@@ -100,11 +100,30 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     const initCMP = require('src/initCMP').default
     expect(initCMP).toHaveBeenCalledWith({
+      debug: false,
+      displayPersistentConsentLink: false,
+      primaryButtonColor: '#9d4ba3',
       publisherName: 'Tab for a Cause',
       publisherLogo:
         'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
+    })
+  })
+
+  it('overrides default options to initCMP when some options are provided', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP({
+      debug: true,
+      publisherName: 'My Site',
+      publisherLogo: undefined,
+    })
+    const initCMP = require('src/initCMP').default
+    expect(initCMP).toHaveBeenCalledWith({
+      debug: true,
       displayPersistentConsentLink: false,
       primaryButtonColor: '#9d4ba3',
+      publisherName: 'My Site',
+      publisherLogo: undefined,
     })
   })
 

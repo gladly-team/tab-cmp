@@ -41,11 +41,12 @@ export const initializeCMP = async (userOptions) => {
   tabCMPInitialized = true
 
   const options = {
+    debug: false,
+    displayPersistentConsentLink: false,
+    primaryButtonColor: '#9d4ba3',
     publisherName: 'Tab for a Cause',
     publisherLogo:
       'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
-    displayPersistentConsentLink: false,
-    primaryButtonColor: '#9d4ba3',
     // onError: () => {}, // TODO
     ...userOptions,
   }
