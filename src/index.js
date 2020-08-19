@@ -28,7 +28,7 @@ export const getCMPHeadScript = requireCMPInitialized(() => {
   console.log(`[tab-cmp] TODO: getCMPHeadScript`)
 })
 
-export const initializeCMP = async (options) => {
+export const initializeCMP = async (userOptions) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
     // eslint-disable-next-line no-console
@@ -38,6 +38,16 @@ export const initializeCMP = async (options) => {
     return
   }
   tabCMPInitialized = true
+
+  const options = {
+    publisherName: 'Tab for a Cause',
+    publisherLogo:
+      'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
+    displayPersistentConsentLink: false,
+    primaryButtonColor: '#9d4ba3',
+    // onError: () => {}, // TODO
+    ...userOptions,
+  }
 
   // eslint-disable-next-line no-console
   console.log(
@@ -77,7 +87,7 @@ export const initializeCMP = async (options) => {
     : isInUS
 
   // Initialize our modified version of Quantcast Choice.
-  initCMP()
+  initCMP(options)
 
   // We need to set the default USP data, which QC Choice does
   // not do automatically.

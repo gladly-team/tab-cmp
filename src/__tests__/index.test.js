@@ -94,6 +94,20 @@ describe('index.js: initializeCMP', () => {
     expect(initCMP).toHaveBeenCalled()
   })
 
+  it('passes default options to initCMP when no options are provided', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const initCMP = require('src/initCMP').default
+    expect(initCMP).toHaveBeenCalledWith({
+      publisherName: 'Tab for a Cause',
+      publisherLogo:
+        'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
+      displayPersistentConsentLink: false,
+      primaryButtonColor: '#9d4ba3',
+    })
+  })
+
   it('sets window.tabCMP.doesGDPRApply to true when the client location is in the EU', async () => {
     expect.assertions(1)
     const getClientLocation = require('src/getClientLocation').default
