@@ -11,7 +11,7 @@ const setDefaultUSPData = () => {
         window.__uspapi('setUspDftData', 1, () => {
           if (!status) {
             // eslint-disable-next-line no-console
-            console.log('Error: USP string not updated!')
+            console.error('[tab-cmp] Unable to set default USP string.')
           }
         })
       }
