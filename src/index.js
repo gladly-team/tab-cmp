@@ -98,22 +98,22 @@ export const initializeCMP = async (options) => {
   }
 }
 
-export const doesGDPRApply = async () => {
+export const doesGDPRApply = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: doesGDPRApply`)
-}
+})
 
-export const doesCCPAApply = async () => {
+export const doesCCPAApply = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: doesCCPAApply`)
-}
+})
 
-export const openTCFConsentDialog = async () => {
+export const openTCFConsentDialog = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: openTCFConsentDialog`)
-}
+})
 
-export const openCCPAConsentDialog = async () => {
+export const openCCPAConsentDialog = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: openCCPAConsentDialog`)
-}
+})
