@@ -1,5 +1,6 @@
 import initCMP from 'src/initCMP'
 import getClientLocation from 'src/getClientLocation'
+import setDefaultUSPData from 'src/setDefaultUSPData'
 
 let tabCMPInitialized = false
 
@@ -78,26 +79,9 @@ export const initializeCMP = async (options) => {
   // Initialize our modified version of Quantcast Choice.
   initCMP()
 
-  // TODO: move into separate module.
   // We need to set the default USP data, which QC Choice does
-  // not do.
-  // https://help.quantcast.com/hc/en-us/articles/360047078534-Choice-CMP2-CCPA-API-Index-TCF-v2-0-
-  if (typeof window.__uspapi === 'function') {
-    window.__uspapi('uspPing', 1, (obj, status) => {
-      if (
-        status &&
-        obj.mode.includes('USP') &&
-        obj.jurisdiction.includes(obj.location.toUpperCase())
-      ) {
-        window.__uspapi('setUspDftData', 1, () => {
-          if (!status) {
-            // eslint-disable-next-line no-console
-            console.log('Error: USP string not updated!')
-          }
-        })
-      }
-    })
-  }
+  // not do automatically.
+  setDefaultUSPData()
 }
 
 export const doesGDPRApply = requireCMPInitialized(async () => {
