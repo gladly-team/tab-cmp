@@ -8,7 +8,7 @@ const setUpQuantcastChoice = () => {
   const firstScript = document.getElementsByTagName('script')[0]
   // cmpScriptElement.async = true
   // cmpScriptElement.type = 'text/javascript'
-  // const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/7/cmp2.js'
+  // const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/9/cmp2.js'
   // cmpScriptElement.src = cmpVersion
   window._qevents = window._qevents || []
 
@@ -27,7 +27,7 @@ const setUpQuantcastChoice = () => {
   window._qevents.push({ qacct: qcaccount, source: 'choice' })
   const cmpNoScriptElement = document.createElement('noscript')
   const div = document.createElement('div')
-  div.style = 'display:none;'
+  div.style.display = 'none;'
   const img = document.createElement('img')
   img.src = '//pixel.quantserve.com/pixel/p-' + 'FPBLJYpJgR9Zu' + '.gif'
   img.border = '0'
@@ -165,7 +165,7 @@ const initCMP = (options = {}) => {
       publisherSpecialPurposesIds: [1, 2],
       publisherFeaturesIds: [],
       publisherSpecialFeaturesIds: [],
-      stacks: [10, 11],
+      stacks: [1, 42],
       softOptInEnabled: false,
       uiLayout: 'popup',
       vendorListUpdateFreq: 90,
@@ -174,12 +174,18 @@ const initCMP = (options = {}) => {
       persistentConsentLinkLocation: 4,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'ZCBCa4Whnex8mtaWn5dzow',
+      hashCode: 'csG3IDVSxoj0rG+udKdEXA',
+      publisherCountryCode: 'US',
+      publisherName: 'LOCAL - Tab for a Cause',
+      vendorPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      vendorFeaturesIds: [1, 2, 3],
+      vendorPurposeLegitimateInterestIds: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      vendorSpecialFeaturesIds: [1, 2],
+      vendorSpecialPurposesIds: [1, 2],
+      googleEnabled: true,
       uspVersion: 1,
       uspJurisdiction: ['US'],
       uspLspact: 'N',
-      publisherName: 'Tab for a Cause',
-      publisherCountryCode: 'US',
       suppressCcpaLinks: true,
     },
   })
