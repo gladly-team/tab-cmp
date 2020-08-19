@@ -3,9 +3,11 @@
 jest.mock('src/initCMP')
 jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
+jest.mock('src/setDefaultUSPData')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
+  window.__uspapi = jest.fn()
   const getClientLocation = require('src/getClientLocation').default
   getClientLocation.mockResolvedValue({
     countryISOCode: 'DE',
@@ -179,6 +181,14 @@ describe('index.js: getCMPHeadScript', () => {
     index.initializeCMP()
     index.getCMPHeadScript()
     expect(mockConsoleError).not.toHaveBeenCalled()
+  })
+
+  it('calls setDefaultUSPData', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const setDefaultUSPData = require('src/setDefaultUSPData').default
+    expect(setDefaultUSPData).toHaveBeenCalled()
   })
 })
 

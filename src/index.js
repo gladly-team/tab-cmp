@@ -1,5 +1,6 @@
 import initCMP from 'src/initCMP'
 import getClientLocation from 'src/getClientLocation'
+import setDefaultUSPData from 'src/setDefaultUSPData'
 
 let tabCMPInitialized = false
 
@@ -28,7 +29,7 @@ export const getCMPHeadScript = requireCMPInitialized(() => {
 })
 
 export const initializeCMP = async (options) => {
-  // Ensure this is called only once.
+  // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -43,6 +44,7 @@ export const initializeCMP = async (options) => {
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
   )
 
+  // Determine the client location to know which privacy laws apply.
   let isInUS = false
   let isInEuropeanUnion = false
   try {
@@ -57,10 +59,10 @@ export const initializeCMP = async (options) => {
     `[tab-cmp] Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
   )
 
+  // Set (as needed) the tab-cmp window variable. Then, set whether
+  // GDPR and CCPA apply, if not set already. We use these values
+  // in the modified version of the Quantcast Choice CMP JS.
   window.tabCMP = window.tabCMP || {}
-
-  // Only set doesGDPRApply and doesCCPAApply if they're not
-  // already defined.
   window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
     window.tabCMP,
     'doesGDPRApply'
@@ -74,28 +76,12 @@ export const initializeCMP = async (options) => {
     ? window.tabCMP.doesCCPAApply
     : isInUS
 
+  // Initialize our modified version of Quantcast Choice.
   initCMP()
 
-  // TODO: move into separate module.
   // We need to set the default USP data, which QC Choice does
-  // not do.
-  // https://help.quantcast.com/hc/en-us/articles/360047078534-Choice-CMP2-CCPA-API-Index-TCF-v2-0-
-  if (typeof window.__uspapi === 'function') {
-    window.__uspapi('uspPing', 1, (obj, status) => {
-      if (
-        status &&
-        obj.mode.includes('USP') &&
-        obj.jurisdiction.includes(obj.location.toUpperCase())
-      ) {
-        window.__uspapi('setUspDftData', 1, () => {
-          if (!status) {
-            // eslint-disable-next-line no-console
-            console.log('Error: USP string not updated!')
-          }
-        })
-      }
-    })
-  }
+  // not do automatically.
+  setDefaultUSPData()
 }
 
 export const doesGDPRApply = requireCMPInitialized(async () => {
