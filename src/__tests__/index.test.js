@@ -21,6 +21,44 @@ afterEach(() => {
   delete window.tabCMP
 })
 
+describe('index.js:', () => {
+  it('defines initializeCMP', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.initializeCMP).toBeDefined()
+  })
+
+  it('defines getCMPHeadScript', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.getCMPHeadScript).toBeDefined()
+  })
+
+  it('defines doesGDPRApply', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.doesGDPRApply).toBeDefined()
+  })
+
+  it('defines doesCCPAApply', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.doesCCPAApply).toBeDefined()
+  })
+
+  it('defines openTCFConsentDialog', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.openTCFConsentDialog).toBeDefined()
+  })
+
+  it('defines openCCPAConsentDialog', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.openCCPAConsentDialog).toBeDefined()
+  })
+})
+
 describe('index.js: initializeCMP', () => {
   it('warns if calling initializeCMP more than once', () => {
     expect.assertions(2)
@@ -110,40 +148,25 @@ describe('index.js: initializeCMP', () => {
   })
 })
 
-describe('index.js:', () => {
-  it('defines initializeCMP', () => {
+describe('index.js: getClientLocation', () => {
+  it("calls console.error if it's called before calling initializeCMP", () => {
     expect.assertions(1)
     const index = require('src/index')
-    expect(index.initializeCMP).toBeDefined()
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementationOnce(mockConsoleError)
+    index.getCMPHeadScript()
+    expect(mockConsoleError).toHaveBeenCalledWith(
+      '[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.'
+    )
   })
 
-  it('defines getCMPHeadScript', () => {
+  it("does not call console.error if it's called after calling initializeCMP", () => {
     expect.assertions(1)
     const index = require('src/index')
-    expect(index.getCMPHeadScript).toBeDefined()
-  })
-
-  it('defines doesGDPRApply', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.doesGDPRApply).toBeDefined()
-  })
-
-  it('defines doesCCPAApply', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.doesCCPAApply).toBeDefined()
-  })
-
-  it('defines openTCFConsentDialog', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.openTCFConsentDialog).toBeDefined()
-  })
-
-  it('defines openCCPAConsentDialog', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.openCCPAConsentDialog).toBeDefined()
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementationOnce(mockConsoleError)
+    index.initializeCMP()
+    index.getCMPHeadScript()
+    expect(mockConsoleError).not.toHaveBeenCalled()
   })
 })
