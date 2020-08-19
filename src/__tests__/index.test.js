@@ -22,10 +22,17 @@ afterEach(() => {
 })
 
 describe('index.js: initializeCMP', () => {
-  it('defines initializeCMP', () => {
-    expect.assertions(1)
+  it('warns if calling initializeCMP more than once', () => {
+    expect.assertions(2)
     const index = require('src/index')
-    expect(index.initializeCMP).toBeDefined()
+    const mockConsoleWarn = jest.fn()
+    jest.spyOn(console, 'warn').mockImplementationOnce(mockConsoleWarn)
+    index.initializeCMP()
+    expect(mockConsoleWarn).not.toHaveBeenCalled()
+    index.initializeCMP()
+    expect(mockConsoleWarn).toHaveBeenCalledWith(
+      '[tab-cmp] initializeCMP was called more than once. Ignoring this initialization.'
+    )
   })
 
   it('calls initCMP', async () => {
@@ -104,6 +111,12 @@ describe('index.js: initializeCMP', () => {
 })
 
 describe('index.js:', () => {
+  it('defines initializeCMP', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.initializeCMP).toBeDefined()
+  })
+
   it('defines getCMPHeadScript', () => {
     expect.assertions(1)
     const index = require('src/index')

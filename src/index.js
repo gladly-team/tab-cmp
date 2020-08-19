@@ -1,6 +1,8 @@
 import initCMP from 'src/initCMP'
 import getClientLocation from 'src/getClientLocation'
 
+let tabCMPInitialized = false
+
 // TODO: gracefully handle if this code is run on the
 // server side.
 
@@ -10,6 +12,16 @@ export const getCMPHeadScript = () => {
 }
 
 export const initializeCMP = async (options) => {
+  // Ensure this is called only once.
+  if (tabCMPInitialized) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[tab-cmp] initializeCMP was called more than once. Ignoring this initialization.`
+    )
+    return
+  }
+  tabCMPInitialized = true
+
   // eslint-disable-next-line no-console
   console.log(
     `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
