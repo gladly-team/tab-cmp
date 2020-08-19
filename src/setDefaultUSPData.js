@@ -8,8 +8,8 @@ const setDefaultUSPData = () => {
         obj.mode.includes('USP') &&
         obj.jurisdiction.includes(obj.location.toUpperCase())
       ) {
-        window.__uspapi('setUspDftData', 1, () => {
-          if (!status) {
+        window.__uspapi('setUspDftData', 1, (_, newStatus) => {
+          if (!newStatus) {
             // eslint-disable-next-line no-console
             console.error('[tab-cmp] Unable to set default USP string.')
           }

@@ -3,6 +3,13 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+  // Reset console mocks.
+  // eslint-disable-next-line no-console
+  if (console.error.mockRestore) {
+    // eslint-disable-next-line no-console
+    console.error.mockRestore()
+  }
+
   jest.clearAllMocks()
 })
 
@@ -36,6 +43,7 @@ describe('setDefaultUSPData', () => {
         }
         case 'setUspDftData': {
           calledToSetDefault = true
+          callback(mockPingResponse, mockPingStatus)
           break
         }
         default:
@@ -62,6 +70,7 @@ describe('setDefaultUSPData', () => {
         }
         case 'setUspDftData': {
           calledToSetDefault = true
+          callback(mockPingResponse, mockPingStatus)
           break
         }
         default:
@@ -70,5 +79,31 @@ describe('setDefaultUSPData', () => {
     const setDefaultUSPData = require('src/setDefaultUSPData').default
     setDefaultUSPData()
     expect(calledToSetDefault).toBe(false)
+  })
+
+  it('calls console.error if there is a problem setting default USP data', () => {
+    expect.assertions(1)
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    const mockPingResponse = getMockPingResponse()
+    const mockPingStatus = true
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, mockPingStatus)
+          break
+        }
+        case 'setUspDftData': {
+          callback(mockPingResponse, false) // false === bad status
+          break
+        }
+        default:
+      }
+    })
+    const setDefaultUSPData = require('src/setDefaultUSPData').default
+    setDefaultUSPData()
+    expect(mockConsoleError).toHaveBeenCalledWith(
+      '[tab-cmp] Unable to set default USP string.'
+    )
   })
 })
