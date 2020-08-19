@@ -3,13 +3,29 @@ import getClientLocation from 'src/getClientLocation'
 
 let tabCMPInitialized = false
 
+const requireCMPInitialized = (func) => (args) => {
+  if (!tabCMPInitialized) {
+    // We don't want tab-cmp to ever throw. We'd rather it fail
+    // silently than disrupt its parent app.
+    // eslint-disable-next-line no-console
+    console.error(
+      `[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.`
+    )
+
+    // To allow composition.
+    return () => {}
+  }
+
+  return func(args)
+}
+
 // TODO: gracefully handle if this code is run on the
 // server side.
 
-export const getCMPHeadScript = () => {
+export const getCMPHeadScript = requireCMPInitialized(() => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: getCMPHeadScript`)
-}
+})
 
 export const initializeCMP = async (options) => {
   // Ensure this is called only once.
@@ -82,22 +98,22 @@ export const initializeCMP = async (options) => {
   }
 }
 
-export const doesGDPRApply = async () => {
+export const doesGDPRApply = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: doesGDPRApply`)
-}
+})
 
-export const doesCCPAApply = async () => {
+export const doesCCPAApply = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: doesCCPAApply`)
-}
+})
 
-export const openTCFConsentDialog = async () => {
+export const openTCFConsentDialog = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: openTCFConsentDialog`)
-}
+})
 
-export const openCCPAConsentDialog = async () => {
+export const openCCPAConsentDialog = requireCMPInitialized(async () => {
   // eslint-disable-next-line no-console
   console.log(`[tab-cmp] TODO: openCCPAConsentDialog`)
-}
+})
