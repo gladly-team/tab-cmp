@@ -1,4 +1,5 @@
 import initCMP from 'src/initCMP'
+import { setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
 
@@ -43,13 +44,16 @@ export const initializeCMP = async (userOptions) => {
   const options = {
     debug: false,
     displayPersistentConsentLink: false,
+    onError: () => {},
     primaryButtonColor: '#9d4ba3',
     publisherName: 'Tab for a Cause',
     publisherLogo:
       'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
-    // onError: () => {}, // TODO
     ...userOptions,
   }
+
+  // Set up error and debug logging.
+  setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
 
   // eslint-disable-next-line no-console
   console.log(

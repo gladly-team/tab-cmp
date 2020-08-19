@@ -102,6 +102,7 @@ describe('index.js: initializeCMP', () => {
     expect(initCMP).toHaveBeenCalledWith({
       debug: false,
       displayPersistentConsentLink: false,
+      onError: expect.any(Function),
       primaryButtonColor: '#9d4ba3',
       publisherName: 'Tab for a Cause',
       publisherLogo:
@@ -121,6 +122,7 @@ describe('index.js: initializeCMP', () => {
     expect(initCMP).toHaveBeenCalledWith({
       debug: true,
       displayPersistentConsentLink: false,
+      onError: expect.any(Function),
       primaryButtonColor: '#9d4ba3',
       publisherName: 'My Site',
       publisherLogo: undefined,
