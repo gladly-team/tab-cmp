@@ -1,14 +1,12 @@
 /* eslint no-underscore-dangle:0 */
 
-import initCMP from 'src/initCMP'
-import getClientLocation from 'src/getClientLocation'
-
 jest.mock('src/initCMP')
 jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
+  const getClientLocation = require('src/getClientLocation').default
   getClientLocation.mockResolvedValue({
     countryISOCode: 'DE',
     isInUS: false,
@@ -19,25 +17,35 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.clearAllMocks()
+  jest.resetModules()
   delete window.tabCMP
 })
 
 describe('index.js: initializeCMP', () => {
-  it('defines initializeCMP', () => {
-    expect.assertions(1)
+  it('warns if calling initializeCMP more than once', () => {
+    expect.assertions(2)
     const index = require('src/index')
-    expect(index.initializeCMP).toBeDefined()
+    const mockConsoleWarn = jest.fn()
+    jest.spyOn(console, 'warn').mockImplementationOnce(mockConsoleWarn)
+    index.initializeCMP()
+    expect(mockConsoleWarn).not.toHaveBeenCalled()
+    index.initializeCMP()
+    expect(mockConsoleWarn).toHaveBeenCalledWith(
+      '[tab-cmp] initializeCMP was called more than once. Ignoring this initialization.'
+    )
   })
 
   it('calls initCMP', async () => {
     expect.assertions(1)
     const index = require('src/index')
     await index.initializeCMP()
+    const initCMP = require('src/initCMP').default
     expect(initCMP).toHaveBeenCalled()
   })
 
   it('sets window.tabCMP.doesGDPRApply to true when the client location is in the EU', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
     getClientLocation.mockResolvedValue({
       countryISOCode: 'DE',
       isInUS: false,
@@ -51,6 +59,7 @@ describe('index.js: initializeCMP', () => {
 
   it('sets window.tabCMP.doesGDPRApply to false when the client location is not in the EU', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
     getClientLocation.mockResolvedValue({
       countryISOCode: 'JP',
       isInUS: false,
@@ -64,6 +73,7 @@ describe('index.js: initializeCMP', () => {
 
   it('sets window.tabCMP.doesCCPAApply to true when the client location is in the US', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
     getClientLocation.mockResolvedValue({
       countryISOCode: 'US',
       isInUS: true,
@@ -77,6 +87,7 @@ describe('index.js: initializeCMP', () => {
 
   it('sets window.tabCMP.doesCCPAApply to false when the client location is not in the US', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
     getClientLocation.mockResolvedValue({
       countryISOCode: 'DE',
       isInUS: false,
@@ -88,8 +99,9 @@ describe('index.js: initializeCMP', () => {
     expect(window.tabCMP.doesCCPAApply).toBe(false)
   })
 
-  it('sets window.tabCMP.doesGDPRApply adn window.tabCMP.doesCCPAApply to false when the client location fails', async () => {
+  it('sets window.tabCMP.doesGDPRApply and window.tabCMP.doesCCPAApply to false when the client location fails', async () => {
     expect.assertions(2)
+    const getClientLocation = require('src/getClientLocation').default
     getClientLocation.mockRejectedValue(new Error('Uh oh.'))
     const index = require('src/index')
     await index.initializeCMP()
@@ -99,6 +111,12 @@ describe('index.js: initializeCMP', () => {
 })
 
 describe('index.js:', () => {
+  it('defines initializeCMP', () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    expect(index.initializeCMP).toBeDefined()
+  })
+
   it('defines getCMPHeadScript', () => {
     expect.assertions(1)
     const index = require('src/index')
