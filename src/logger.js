@@ -8,10 +8,10 @@ export const setUpLogger = ({ debug, onErrorCallback }) => {
   }
 }
 
-export const logDebugging = (args) => {
+export const logDebugging = (...args) => {
   if (debugEnabled) {
     // eslint-disable-next-line no-console
-    console.log(`[tab-cmp] [debug] ${args}`)
+    console.log.apply(this, [`[tab-cmp] [debug]:`, ...args])
   }
 }
 
