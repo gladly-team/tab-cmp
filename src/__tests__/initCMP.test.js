@@ -37,7 +37,7 @@ describe('initCMP', () => {
     const opts = getMockOptions()
     initCMP(opts)
     expect(logDebugging).toHaveBeenCalledWith(
-      `initCMP called with ${JSON.stringify(opts)}`
+      `Called initCMP with options: ${JSON.stringify(opts)}`
     )
   })
 

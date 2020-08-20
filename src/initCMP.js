@@ -5,7 +5,7 @@ import { setUpQuantcastChoice, getLanguage } from 'src/qcChoiceModified'
 import { logDebugging } from 'src/logger'
 
 const initCMP = (options) => {
-  logDebugging(`initCMP called with ${JSON.stringify(options)}`)
+  logDebugging(`Called initCMP with options: ${JSON.stringify(options)}`)
   const {
     publisherName,
     publisherLogo,
