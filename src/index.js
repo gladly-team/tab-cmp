@@ -125,13 +125,17 @@ export const initializeCMP = async (userOptions = {}) => {
 
 export const doesGDPRApply = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: doesGDPRApply`)
+    const { isInEuropeanUnion } = await getClientLocation()
+    logDebugging(`Called doesGDPRApply. Response: ${isInEuropeanUnion}`)
+    return isInEuropeanUnion
   })
 )
 
 export const doesCCPAApply = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: doesCCPAApply`)
+    const { isInUS } = await getClientLocation()
+    logDebugging(`Called doesCCPAApply. Response: ${isInUS}`)
+    return isInUS
   })
 )
 

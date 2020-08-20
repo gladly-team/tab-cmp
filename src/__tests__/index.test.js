@@ -377,11 +377,20 @@ describe('index.js: doesGDPRApply', () => {
 
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
     const index = require('src/index')
     index.initializeCMP()
     await index.doesGDPRApply()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesGDPRApply`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called doesGDPRApply. Response: true`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -391,14 +400,44 @@ describe('index.js: doesGDPRApply', () => {
 
     // Arbitrarily break the method.
     const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockImplementationOnce(() => {
       throw mockErr
     })
 
     await expect(index.doesGDPRApply()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('returns true when isInEuropeanUnion is true', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesGDPRApply()
+    expect(response).toBe(true)
+  })
+
+  it('returns false when isInEuropeanUnion is false', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'US',
+      isInUS: true,
+      isInEuropeanUnion: false,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesGDPRApply()
+    expect(response).toBe(false)
   })
 })
 
@@ -426,11 +465,20 @@ describe('index.js: doesCCPAApply', () => {
 
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
     const index = require('src/index')
     index.initializeCMP()
     await index.doesCCPAApply()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesCCPAApply`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called doesCCPAApply. Response: false`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -440,14 +488,44 @@ describe('index.js: doesCCPAApply', () => {
 
     // Arbitrarily break the method.
     const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockImplementationOnce(() => {
       throw mockErr
     })
 
     await expect(index.doesCCPAApply()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('returns true when isInUS is true', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'US',
+      isInUS: true,
+      isInEuropeanUnion: false,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesCCPAApply()
+    expect(response).toBe(true)
+  })
+
+  it('returns false when isInUS is false', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'FR',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesCCPAApply()
+    expect(response).toBe(false)
   })
 })
 
