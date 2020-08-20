@@ -90,7 +90,7 @@ describe('logger: logError', () => {
     }).not.toThrow()
   })
 
-  it('calls the onError callback whenb logError is called', () => {
+  it('calls the onError callback when logError is called', () => {
     const mockConsoleLog = jest.fn()
     console.log.mockImplementation(mockConsoleLog)
     expect.assertions(1)
