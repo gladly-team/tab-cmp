@@ -1,3 +1,5 @@
+import { logError } from 'src/logger'
+
 // If no USP data is set, then set it to a default value.
 // https://help.quantcast.com/hc/en-us/articles/360047078534-Choice-CMP2-CCPA-API-Index-TCF-v2-0-
 const setDefaultUSPData = () => {
@@ -10,8 +12,7 @@ const setDefaultUSPData = () => {
       ) {
         window.__uspapi('setUspDftData', 1, (_, newStatus) => {
           if (!newStatus) {
-            // eslint-disable-next-line no-console
-            console.error('[tab-cmp] Unable to set default USP string.')
+            logError('[tab-cmp] Unable to set default USP string.')
           }
         })
       }
