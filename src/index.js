@@ -40,12 +40,6 @@ const catchAndLogErrors = (func) => async (args) => {
 // TODO: gracefully handle if this code is run on the
 // server side.
 
-export const getCMPHeadScript = requireCMPInitialized(
-  catchAndLogErrors(() => {
-    logDebugging(`TODO: getCMPHeadScript`)
-  })
-)
-
 export const initializeCMP = async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
@@ -125,24 +119,30 @@ export const initializeCMP = async (userOptions = {}) => {
 
 export const doesGDPRApply = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: doesGDPRApply`)
+    const { isInEuropeanUnion } = await getClientLocation()
+    logDebugging(`Called doesGDPRApply. Response: ${isInEuropeanUnion}`)
+    return isInEuropeanUnion
   })
 )
 
 export const doesCCPAApply = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: doesCCPAApply`)
+    const { isInUS } = await getClientLocation()
+    logDebugging(`Called doesCCPAApply. Response: ${isInUS}`)
+    return isInUS
   })
 )
 
 export const openTCFConsentDialog = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: openTCFConsentDialog`)
+    logDebugging(`Called openTCFConsentDialog.`)
+    window.__tcfapi('displayConsentUi', 2, () => {})
   })
 )
 
 export const openCCPAConsentDialog = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: openCCPAConsentDialog`)
+    logDebugging(`Called openCCPAConsentDialog.`)
+    window.__uspapi('displayUspUi')
   })
 )

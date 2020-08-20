@@ -51,12 +51,6 @@ describe('index.js:', () => {
     expect(index.initializeCMP).toBeDefined()
   })
 
-  it('defines getCMPHeadScript', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.getCMPHeadScript).toBeDefined()
-  })
-
   it('defines doesGDPRApply', () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -302,57 +296,6 @@ describe('index.js: initializeCMP', () => {
   })
 })
 
-describe('index.js: getCMPHeadScript', () => {
-  it("calls console.error if it's called before calling initializeCMP", () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
-    index.getCMPHeadScript()
-    expect(mockConsoleError).toHaveBeenCalledWith(
-      '[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.'
-    )
-  })
-
-  it("does not call console.error if it's called after calling initializeCMP", () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
-    index.initializeCMP()
-    index.getCMPHeadScript()
-    expect(mockConsoleError).not.toHaveBeenCalled()
-  })
-
-  it('calls logDebugging with info', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    index.initializeCMP()
-    index.getCMPHeadScript()
-    const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: getCMPHeadScript`)
-  })
-
-  it('calls logError and does not throw if something goes wrong', () => {
-    expect.assertions(2)
-    const index = require('src/index')
-    index.initializeCMP()
-
-    // Arbitrarily break the method.
-    const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
-      throw mockErr
-    })
-
-    expect(() => {
-      index.getCMPHeadScript()
-    }).not.toThrow()
-    const { logError } = require('src/logger')
-    expect(logError).toHaveBeenCalledWith(mockErr)
-  })
-})
-
 describe('index.js: doesGDPRApply', () => {
   it("calls console.error if it's called before calling initializeCMP", async () => {
     expect.assertions(1)
@@ -377,11 +320,20 @@ describe('index.js: doesGDPRApply', () => {
 
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
     const index = require('src/index')
     index.initializeCMP()
     await index.doesGDPRApply()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesGDPRApply`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called doesGDPRApply. Response: true`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -391,14 +343,44 @@ describe('index.js: doesGDPRApply', () => {
 
     // Arbitrarily break the method.
     const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockImplementationOnce(() => {
       throw mockErr
     })
 
     await expect(index.doesGDPRApply()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('returns true when isInEuropeanUnion is true', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesGDPRApply()
+    expect(response).toBe(true)
+  })
+
+  it('returns false when isInEuropeanUnion is false', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'US',
+      isInUS: true,
+      isInEuropeanUnion: false,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesGDPRApply()
+    expect(response).toBe(false)
   })
 })
 
@@ -426,11 +408,20 @@ describe('index.js: doesCCPAApply', () => {
 
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
     const index = require('src/index')
     index.initializeCMP()
     await index.doesCCPAApply()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesCCPAApply`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called doesCCPAApply. Response: false`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -440,14 +431,44 @@ describe('index.js: doesCCPAApply', () => {
 
     // Arbitrarily break the method.
     const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockImplementationOnce(() => {
       throw mockErr
     })
 
     await expect(index.doesCCPAApply()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('returns true when isInUS is true', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'US',
+      isInUS: true,
+      isInEuropeanUnion: false,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesCCPAApply()
+    expect(response).toBe(true)
+  })
+
+  it('returns false when isInUS is false', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'FR',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const index = require('src/index')
+    index.initializeCMP()
+    const response = await index.doesCCPAApply()
+    expect(response).toBe(false)
   })
 })
 
@@ -479,7 +500,9 @@ describe('index.js: openTCFConsentDialog', () => {
     index.initializeCMP()
     await index.openTCFConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openTCFConsentDialog`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called openTCFConsentDialog.`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -497,6 +520,18 @@ describe('index.js: openTCFConsentDialog', () => {
     await expect(index.openTCFConsentDialog()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('calls __tcfapi with "displayConsentUi"', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    index.initializeCMP()
+    await index.openTCFConsentDialog()
+    expect(window.__tcfapi).toHaveBeenCalledWith(
+      'displayConsentUi',
+      2,
+      expect.any(Function)
+    )
   })
 })
 
@@ -528,7 +563,9 @@ describe('index.js: openCCPAConsentDialog', () => {
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openCCPAConsentDialog`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called openCCPAConsentDialog.`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -546,5 +583,13 @@ describe('index.js: openCCPAConsentDialog', () => {
     await expect(index.openCCPAConsentDialog()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('calls __uspapi with "displayUspUi"', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    index.initializeCMP()
+    await index.openCCPAConsentDialog()
+    expect(window.__uspapi).toHaveBeenCalledWith('displayUspUi')
   })
 })
