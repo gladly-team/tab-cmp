@@ -1,5 +1,5 @@
 import initCMP from 'src/initCMP'
-import { logDebugging, setUpLogger } from 'src/logger'
+import { logDebugging, logError, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
 
@@ -15,23 +15,38 @@ const requireCMPInitialized = (func) => (args) => {
     console.error(
       `[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.`
     )
-
-    // To allow composition.
-    return () => {}
+    return
   }
 
+  // We're fine just returning above as a substitute for throwing.
+  // eslint-disable-next-line consistent-return
   return func(args)
 }
 
-// TODO: try/catch all code here.
+const catchAndLogErrors = (func) => async (args) => {
+  let result
+  try {
+    result = await func(args)
+  } catch (e) {
+    logError(e)
+    return
+  }
+
+  // We're fine just returning above as a substitute for throwing.
+  // eslint-disable-next-line consistent-return
+  return result
+}
+
 // TODO: gracefully handle if this code is run on the
 // server side.
 
-export const getCMPHeadScript = requireCMPInitialized(() => {
-  logDebugging(`TODO: getCMPHeadScript`)
-})
+export const getCMPHeadScript = requireCMPInitialized(
+  catchAndLogErrors(() => {
+    logDebugging(`TODO: getCMPHeadScript`)
+  })
+)
 
-export const initializeCMP = async (userOptions) => {
+export const initializeCMP = async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
     // eslint-disable-next-line no-console
@@ -53,62 +68,81 @@ export const initializeCMP = async (userOptions) => {
     ...userOptions,
   }
 
-  // Set up error and debug logging.
-  setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
-
-  logDebugging(`Called initializeCMP with options: ${JSON.stringify(options)}`)
-
-  // Determine the client location to know which privacy laws apply.
-  let isInUS = false
-  let isInEuropeanUnion = false
   try {
-    ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
-    // If client location determination fails, default to no GDPR/CCPA,
-    // which will fall back on IP geolocation in calls to ad partners.
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
+    // Set up error and debug logging.
+    setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(`[tab-cmp] Failed to set up logger.`, e)
+  }
 
-  logDebugging(
-    `Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
-  )
+  try {
+    logDebugging(
+      `Called initializeCMP with options: ${JSON.stringify(options)}`
+    )
 
-  // Set (as needed) the tab-cmp window variable. Then, set whether
-  // GDPR and CCPA apply, if not set already. We use these values
-  // in the modified version of the Quantcast Choice CMP JS.
-  window.tabCMP = window.tabCMP || {}
-  window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
-    window.tabCMP,
-    'doesGDPRApply'
-  )
-    ? window.tabCMP.doesGDPRApply
-    : isInEuropeanUnion
-  window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
-    window.tabCMP,
-    'doesCCPAApply'
-  )
-    ? window.tabCMP.doesCCPAApply
-    : isInUS
+    // Determine the client location to know which privacy laws apply.
+    let isInUS = false
+    let isInEuropeanUnion = false
+    try {
+      ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
+      // If client location determination fails, default to no GDPR/CCPA,
+      // which will fall back on IP geolocation in calls to ad partners.
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
-  // Initialize our modified version of Quantcast Choice.
-  initCMP(options)
+    logDebugging(
+      `Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
+    )
 
-  // We need to set the default USP data, which QC Choice does
-  // not do automatically.
-  setDefaultUSPData()
+    // Set (as needed) the tab-cmp window variable. Then, set whether
+    // GDPR and CCPA apply, if not set already. We use these values
+    // in the modified version of the Quantcast Choice CMP JS.
+    window.tabCMP = window.tabCMP || {}
+    window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
+      window.tabCMP,
+      'doesGDPRApply'
+    )
+      ? window.tabCMP.doesGDPRApply
+      : isInEuropeanUnion
+    window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
+      window.tabCMP,
+      'doesCCPAApply'
+    )
+      ? window.tabCMP.doesCCPAApply
+      : isInUS
+
+    // Initialize our modified version of Quantcast Choice.
+    initCMP(options)
+
+    // We need to set the default USP data, which QC Choice does
+    // not do automatically.
+    setDefaultUSPData()
+  } catch (e) {
+    logError(e)
+  }
 }
 
-export const doesGDPRApply = requireCMPInitialized(async () => {
-  logDebugging(`TODO: doesGDPRApply`)
-})
+export const doesGDPRApply = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: doesGDPRApply`)
+  })
+)
 
-export const doesCCPAApply = requireCMPInitialized(async () => {
-  logDebugging(`TODO: doesCCPAApply`)
-})
+export const doesCCPAApply = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: doesCCPAApply`)
+  })
+)
 
-export const openTCFConsentDialog = requireCMPInitialized(async () => {
-  logDebugging(`TODO: openTCFConsentDialog`)
-})
+export const openTCFConsentDialog = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: openTCFConsentDialog`)
+  })
+)
 
-export const openCCPAConsentDialog = requireCMPInitialized(async () => {
-  logDebugging(`TODO: openCCPAConsentDialog`)
-})
+export const openCCPAConsentDialog = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: openCCPAConsentDialog`)
+  })
+)

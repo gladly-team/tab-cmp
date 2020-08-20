@@ -16,5 +16,7 @@ export const logDebugging = (...args) => {
 }
 
 export const logError = (err) => {
+  // eslint-disable-next-line no-console
+  console.error(err)
   onErrorCallbackFn(err)
 }

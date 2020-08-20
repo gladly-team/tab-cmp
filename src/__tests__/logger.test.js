@@ -2,6 +2,7 @@
 
 beforeEach(() => {
   jest.spyOn(console, 'log').mockImplementation(() => {})
+  jest.spyOn(console, 'error').mockImplementation(() => {})
 })
 
 afterEach(() => {
@@ -10,6 +11,11 @@ afterEach(() => {
   if (console.log.mockRestore) {
     // eslint-disable-next-line no-console
     console.log.mockRestore()
+  }
+  // eslint-disable-next-line no-console
+  if (console.error.mockRestore) {
+    // eslint-disable-next-line no-console
+    console.error.mockRestore()
   }
 
   jest.resetModules()
@@ -77,8 +83,6 @@ describe('logger: logDebugging', () => {
 
 describe('logger: logError', () => {
   it('does not throw when calling logError and no callback has been set', () => {
-    const mockConsoleLog = jest.fn()
-    console.log.mockImplementation(mockConsoleLog)
     expect.assertions(1)
     const { logError, setUpLogger } = require('src/logger')
     setUpLogger({
@@ -90,9 +94,21 @@ describe('logger: logError', () => {
     }).not.toThrow()
   })
 
+  it('calls console.error when logError is called', () => {
+    const mockConsoleError = jest.fn()
+    console.error.mockImplementation(mockConsoleError)
+    expect.assertions(1)
+    const { logError, setUpLogger } = require('src/logger')
+    const onErrCallback = jest.fn()
+    setUpLogger({
+      onErrorCallback: onErrCallback,
+    })
+    const mockErr = new Error('Uh oh!')
+    logError(mockErr)
+    expect(mockConsoleError).toHaveBeenCalledWith(mockErr)
+  })
+
   it('calls the onError callback when logError is called', () => {
-    const mockConsoleLog = jest.fn()
-    console.log.mockImplementation(mockConsoleLog)
     expect.assertions(1)
     const { logError, setUpLogger } = require('src/logger')
     const onErrCallback = jest.fn()

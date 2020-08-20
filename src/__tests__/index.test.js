@@ -96,6 +96,42 @@ describe('index.js: initializeCMP', () => {
     )
   })
 
+  it('calls console.error if setUpLogger fails but does not throw', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+
+    // Arbitrarily break setUpLogger.
+    const mockErr = new Error('Oh no.')
+    const { setUpLogger } = require('src/logger')
+    setUpLogger.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.initializeCMP()).resolves.not.toThrow()
+    expect(mockConsoleError).toHaveBeenCalledWith(
+      '[tab-cmp] Failed to set up logger.',
+      mockErr
+    )
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const initCMP = require('src/initCMP').default
+    initCMP.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.initializeCMP()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
   it('calls logDebugging with info on provided options', async () => {
     expect.assertions(1)
     const opts = getMockOptions()
@@ -131,6 +167,14 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     const initCMP = require('src/initCMP').default
     expect(initCMP).toHaveBeenCalled()
+  })
+
+  it('calls setDefaultUSPData', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const setDefaultUSPData = require('src/setDefaultUSPData').default
+    expect(setDefaultUSPData).toHaveBeenCalled()
   })
 
   it('passes default options to initCMP when no options are provided', async () => {
@@ -283,12 +327,29 @@ describe('index.js: getCMPHeadScript', () => {
   it('calls logDebugging with info', () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     index.getCMPHeadScript()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: getCMPHeadScript`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    expect(() => {
+      index.getCMPHeadScript()
+    }).not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 
@@ -317,12 +378,27 @@ describe('index.js: doesGDPRApply', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.doesGDPRApply()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesGDPRApply`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.doesGDPRApply()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 
@@ -351,12 +427,27 @@ describe('index.js: doesCCPAApply', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.doesCCPAApply()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesCCPAApply`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.doesCCPAApply()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 
@@ -385,12 +476,27 @@ describe('index.js: openTCFConsentDialog', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.openTCFConsentDialog()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openTCFConsentDialog`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.openTCFConsentDialog()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 
@@ -419,11 +525,26 @@ describe('index.js: openCCPAConsentDialog', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openCCPAConsentDialog`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.openCCPAConsentDialog()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
