@@ -1,5 +1,5 @@
 import initCMP from 'src/initCMP'
-import { logDebugging, setUpLogger } from 'src/logger'
+import { logDebugging, logError, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
 
@@ -15,21 +15,36 @@ const requireCMPInitialized = (func) => (args) => {
     console.error(
       `[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.`
     )
-
-    // To allow composition.
-    return () => {}
+    return
   }
 
+  // We're fine just returning above as a substitute for throwing.
+  // eslint-disable-next-line consistent-return
   return func(args)
 }
 
-// TODO: try/catch all code here.
+const catchAndLogErrors = (func) => async (args) => {
+  let result
+  try {
+    result = await func(args)
+  } catch (e) {
+    logError(e)
+    return
+  }
+
+  // We're fine just returning above as a substitute for throwing.
+  // eslint-disable-next-line consistent-return
+  return result
+}
+
 // TODO: gracefully handle if this code is run on the
 // server side.
 
-export const getCMPHeadScript = requireCMPInitialized(() => {
-  logDebugging(`TODO: getCMPHeadScript`)
-})
+export const getCMPHeadScript = requireCMPInitialized(
+  catchAndLogErrors(() => {
+    logDebugging(`TODO: getCMPHeadScript`)
+  })
+)
 
 export const initializeCMP = async (userOptions) => {
   // Ensure initializeCMP is called only once.
@@ -97,18 +112,26 @@ export const initializeCMP = async (userOptions) => {
   setDefaultUSPData()
 }
 
-export const doesGDPRApply = requireCMPInitialized(async () => {
-  logDebugging(`TODO: doesGDPRApply`)
-})
+export const doesGDPRApply = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: doesGDPRApply`)
+  })
+)
 
-export const doesCCPAApply = requireCMPInitialized(async () => {
-  logDebugging(`TODO: doesCCPAApply`)
-})
+export const doesCCPAApply = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: doesCCPAApply`)
+  })
+)
 
-export const openTCFConsentDialog = requireCMPInitialized(async () => {
-  logDebugging(`TODO: openTCFConsentDialog`)
-})
+export const openTCFConsentDialog = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: openTCFConsentDialog`)
+  })
+)
 
-export const openCCPAConsentDialog = requireCMPInitialized(async () => {
-  logDebugging(`TODO: openCCPAConsentDialog`)
-})
+export const openCCPAConsentDialog = requireCMPInitialized(
+  catchAndLogErrors(async () => {
+    logDebugging(`TODO: openCCPAConsentDialog`)
+  })
+)

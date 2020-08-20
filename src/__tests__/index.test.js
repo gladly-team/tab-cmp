@@ -288,6 +288,25 @@ describe('index.js: getCMPHeadScript', () => {
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: getCMPHeadScript`)
   })
+
+  it('calls logError and does not throw if something goes wrong', () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    expect(() => {
+      index.getCMPHeadScript()
+    }).not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
+  })
 })
 
 describe('index.js: doesGDPRApply', () => {
@@ -319,6 +338,23 @@ describe('index.js: doesGDPRApply', () => {
     await index.doesGDPRApply()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesGDPRApply`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.doesGDPRApply()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 
@@ -352,6 +388,23 @@ describe('index.js: doesCCPAApply', () => {
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesCCPAApply`)
   })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.doesCCPAApply()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
+  })
 })
 
 describe('index.js: openTCFConsentDialog', () => {
@@ -384,6 +437,23 @@ describe('index.js: openTCFConsentDialog', () => {
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openTCFConsentDialog`)
   })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.openTCFConsentDialog()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
+  })
 })
 
 describe('index.js: openCCPAConsentDialog', () => {
@@ -415,5 +485,22 @@ describe('index.js: openCCPAConsentDialog', () => {
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openCCPAConsentDialog`)
+  })
+
+  it('calls logError and does not throw if something goes wrong', async () => {
+    expect.assertions(2)
+    const index = require('src/index')
+    index.initializeCMP()
+
+    // Arbitrarily break the method.
+    const mockErr = new Error('Oh no.')
+    const { logDebugging } = require('src/logger')
+    logDebugging.mockImplementationOnce(() => {
+      throw mockErr
+    })
+
+    await expect(index.openCCPAConsentDialog()).resolves.not.toThrow()
+    const { logError } = require('src/logger')
+    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
