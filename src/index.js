@@ -141,12 +141,14 @@ export const doesCCPAApply = requireCMPInitialized(
 
 export const openTCFConsentDialog = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: openTCFConsentDialog`)
+    logDebugging(`Called openTCFConsentDialog.`)
+    window.__tcfapi('displayConsentUi', 2, () => {})
   })
 )
 
 export const openCCPAConsentDialog = requireCMPInitialized(
   catchAndLogErrors(async () => {
-    logDebugging(`TODO: openCCPAConsentDialog`)
+    logDebugging(`Called openCCPAConsentDialog.`)
+    window.__uspapi('displayUspUi')
   })
 )

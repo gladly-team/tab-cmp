@@ -557,7 +557,9 @@ describe('index.js: openTCFConsentDialog', () => {
     index.initializeCMP()
     await index.openTCFConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openTCFConsentDialog`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called openTCFConsentDialog.`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -575,6 +577,18 @@ describe('index.js: openTCFConsentDialog', () => {
     await expect(index.openTCFConsentDialog()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('calls __tcfapi with "displayConsentUi"', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    index.initializeCMP()
+    await index.openTCFConsentDialog()
+    expect(window.__tcfapi).toHaveBeenCalledWith(
+      'displayConsentUi',
+      2,
+      expect.any(Function)
+    )
   })
 })
 
@@ -606,7 +620,9 @@ describe('index.js: openCCPAConsentDialog', () => {
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openCCPAConsentDialog`)
+    expect(logDebugging).toHaveBeenLastCalledWith(
+      `Called openCCPAConsentDialog.`
+    )
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -624,5 +640,13 @@ describe('index.js: openCCPAConsentDialog', () => {
     await expect(index.openCCPAConsentDialog()).resolves.not.toThrow()
     const { logError } = require('src/logger')
     expect(logError).toHaveBeenCalledWith(mockErr)
+  })
+
+  it('calls __uspapi with "displayUspUi"', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    index.initializeCMP()
+    await index.openCCPAConsentDialog()
+    expect(window.__uspapi).toHaveBeenCalledWith('displayUspUi')
   })
 })
