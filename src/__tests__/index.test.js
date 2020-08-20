@@ -5,6 +5,7 @@ jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
 jest.mock('src/setDefaultUSPData')
 jest.mock('src/logger')
+jest.mock('src/isClientSide')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
@@ -16,6 +17,8 @@ beforeEach(() => {
     isInEuropeanUnion: true,
     queryTime: '2018-05-15T10:30:00.000Z',
   })
+  const isClientSide = require('src/isClientSide').default
+  isClientSide.mockReturnValue(true)
 })
 
 afterEach(() => {
@@ -77,6 +80,16 @@ describe('index.js:', () => {
 })
 
 describe('index.js: initializeCMP', () => {
+  it('throws if called in a server-side context', () => {
+    expect.assertions(1)
+    const isClientSide = require('src/isClientSide').default
+    isClientSide.mockReturnValue(false)
+    const index = require('src/index')
+    expect(() => {
+      index.initializeCMP()
+    }).toThrow('[tab-cmp] tab-cmp cannot be called server-side.')
+  })
+
   it('warns if calling initializeCMP more than once', () => {
     expect.assertions(2)
     const index = require('src/index')
@@ -297,6 +310,17 @@ describe('index.js: initializeCMP', () => {
 })
 
 describe('index.js: doesGDPRApply', () => {
+  it('throws if called in a server-side context', async () => {
+    expect.assertions(1)
+    const isClientSide = require('src/isClientSide').default
+    const index = require('src/index')
+    index.initializeCMP()
+    isClientSide.mockReturnValue(false)
+    await expect(async () => index.doesGDPRApply()).rejects.toThrow(
+      '[tab-cmp] tab-cmp cannot be called server-side.'
+    )
+  })
+
   it("calls console.error if it's called before calling initializeCMP", async () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -385,6 +409,17 @@ describe('index.js: doesGDPRApply', () => {
 })
 
 describe('index.js: doesCCPAApply', () => {
+  it('throws if called in a server-side context', async () => {
+    expect.assertions(1)
+    const isClientSide = require('src/isClientSide').default
+    const index = require('src/index')
+    index.initializeCMP()
+    isClientSide.mockReturnValue(false)
+    await expect(async () => index.doesCCPAApply()).rejects.toThrow(
+      '[tab-cmp] tab-cmp cannot be called server-side.'
+    )
+  })
+
   it("calls console.error if it's called before calling initializeCMP", async () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -473,6 +508,17 @@ describe('index.js: doesCCPAApply', () => {
 })
 
 describe('index.js: openTCFConsentDialog', () => {
+  it('throws if called in a server-side context', async () => {
+    expect.assertions(1)
+    const isClientSide = require('src/isClientSide').default
+    const index = require('src/index')
+    index.initializeCMP()
+    isClientSide.mockReturnValue(false)
+    await expect(async () => index.openTCFConsentDialog()).rejects.toThrow(
+      '[tab-cmp] tab-cmp cannot be called server-side.'
+    )
+  })
+
   it("calls console.error if it's called before calling initializeCMP", async () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -536,6 +582,17 @@ describe('index.js: openTCFConsentDialog', () => {
 })
 
 describe('index.js: openCCPAConsentDialog', () => {
+  it('throws if called in a server-side context', async () => {
+    expect.assertions(1)
+    const isClientSide = require('src/isClientSide').default
+    const index = require('src/index')
+    index.initializeCMP()
+    isClientSide.mockReturnValue(false)
+    await expect(async () => index.openCCPAConsentDialog()).rejects.toThrow(
+      '[tab-cmp] tab-cmp cannot be called server-side.'
+    )
+  })
+
   it("calls console.error if it's called before calling initializeCMP", async () => {
     expect.assertions(1)
     const index = require('src/index')
