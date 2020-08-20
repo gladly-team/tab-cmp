@@ -51,12 +51,6 @@ describe('index.js:', () => {
     expect(index.initializeCMP).toBeDefined()
   })
 
-  it('defines getCMPHeadScript', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    expect(index.getCMPHeadScript).toBeDefined()
-  })
-
   it('defines doesGDPRApply', () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -299,57 +293,6 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     expect(window.tabCMP.doesGDPRApply).toBe(false)
     expect(window.tabCMP.doesCCPAApply).toBe(false)
-  })
-})
-
-describe('index.js: getCMPHeadScript', () => {
-  it("calls console.error if it's called before calling initializeCMP", () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
-    index.getCMPHeadScript()
-    expect(mockConsoleError).toHaveBeenCalledWith(
-      '[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.'
-    )
-  })
-
-  it("does not call console.error if it's called after calling initializeCMP", () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
-    index.initializeCMP()
-    index.getCMPHeadScript()
-    expect(mockConsoleError).not.toHaveBeenCalled()
-  })
-
-  it('calls logDebugging with info', () => {
-    expect.assertions(1)
-    const index = require('src/index')
-    index.initializeCMP()
-    index.getCMPHeadScript()
-    const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: getCMPHeadScript`)
-  })
-
-  it('calls logError and does not throw if something goes wrong', () => {
-    expect.assertions(2)
-    const index = require('src/index')
-    index.initializeCMP()
-
-    // Arbitrarily break the method.
-    const mockErr = new Error('Oh no.')
-    const { logDebugging } = require('src/logger')
-    logDebugging.mockImplementationOnce(() => {
-      throw mockErr
-    })
-
-    expect(() => {
-      index.getCMPHeadScript()
-    }).not.toThrow()
-    const { logError } = require('src/logger')
-    expect(logError).toHaveBeenCalledWith(mockErr)
   })
 })
 

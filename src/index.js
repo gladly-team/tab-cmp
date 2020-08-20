@@ -40,12 +40,6 @@ const catchAndLogErrors = (func) => async (args) => {
 // TODO: gracefully handle if this code is run on the
 // server side.
 
-export const getCMPHeadScript = requireCMPInitialized(
-  catchAndLogErrors(() => {
-    logDebugging(`TODO: getCMPHeadScript`)
-  })
-)
-
 export const initializeCMP = async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
