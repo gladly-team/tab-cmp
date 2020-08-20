@@ -4,6 +4,7 @@ jest.mock('src/initCMP')
 jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
 jest.mock('src/setDefaultUSPData')
+jest.mock('src/logger')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
@@ -32,6 +33,15 @@ afterEach(() => {
   jest.clearAllMocks()
   jest.resetModules()
   delete window.tabCMP
+})
+
+const getMockOptions = () => ({
+  debug: false,
+  displayPersistentConsentLink: true,
+  onError: () => {},
+  primaryButtonColor: '#FF0000',
+  publisherName: 'My Cool Site',
+  publisherLogo: 'https://example.com/some-logo.png',
 })
 
 describe('index.js:', () => {
@@ -86,6 +96,35 @@ describe('index.js: initializeCMP', () => {
     )
   })
 
+  it('calls logDebugging with info on provided options', async () => {
+    expect.assertions(1)
+    const opts = getMockOptions()
+    const index = require('src/index')
+    await index.initializeCMP(opts)
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenCalledWith(
+      `Called initializeCMP with options: ${JSON.stringify(opts)}`
+    )
+  })
+
+  it('calls logDebugging with info on client location', async () => {
+    expect.assertions(1)
+    const getClientLocation = require('src/getClientLocation').default
+    getClientLocation.mockResolvedValue({
+      countryISOCode: 'DE',
+      isInUS: false,
+      isInEuropeanUnion: true,
+      queryTime: '2018-05-15T10:30:00.000Z',
+    })
+    const opts = getMockOptions()
+    const index = require('src/index')
+    await index.initializeCMP(opts)
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenCalledWith(
+      `Client location. isInEU: true. isInUS: false`
+    )
+  })
+
   it('calls initCMP', async () => {
     expect.assertions(1)
     const index = require('src/index')
@@ -100,11 +139,55 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     const initCMP = require('src/initCMP').default
     expect(initCMP).toHaveBeenCalledWith({
+      debug: false,
+      displayPersistentConsentLink: false,
+      onError: expect.any(Function),
+      primaryButtonColor: '#9d4ba3',
       publisherName: 'Tab for a Cause',
       publisherLogo:
         'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
+    })
+  })
+
+  it('overrides default options to initCMP when some options are provided', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP({
+      debug: true,
+      publisherName: 'My Site',
+      publisherLogo: undefined,
+    })
+    const initCMP = require('src/initCMP').default
+    expect(initCMP).toHaveBeenCalledWith({
+      debug: true,
       displayPersistentConsentLink: false,
+      onError: expect.any(Function),
       primaryButtonColor: '#9d4ba3',
+      publisherName: 'My Site',
+      publisherLogo: undefined,
+    })
+  })
+
+  it('sets up logging using default options when none are provided', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const { setUpLogger } = require('src/logger')
+    expect(setUpLogger).toHaveBeenCalledWith({
+      debug: false,
+      onErrorCallback: expect.any(Function),
+    })
+  })
+
+  it('sets up logging using provided options', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockOnErrCb = () => {}
+    await index.initializeCMP({ debug: true, onError: mockOnErrCb })
+    const { setUpLogger } = require('src/logger')
+    expect(setUpLogger).toHaveBeenCalledWith({
+      debug: true,
+      onErrorCallback: mockOnErrCb,
     })
   })
 
@@ -197,12 +280,15 @@ describe('index.js: getCMPHeadScript', () => {
     expect(mockConsoleError).not.toHaveBeenCalled()
   })
 
-  it('calls setDefaultUSPData', async () => {
+  it('calls logDebugging with info', () => {
     expect.assertions(1)
     const index = require('src/index')
-    await index.initializeCMP()
-    const setDefaultUSPData = require('src/setDefaultUSPData').default
-    expect(setDefaultUSPData).toHaveBeenCalled()
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    index.initializeCMP()
+    index.getCMPHeadScript()
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: getCMPHeadScript`)
   })
 })
 
@@ -227,6 +313,17 @@ describe('index.js: doesGDPRApply', () => {
     await index.doesGDPRApply()
     expect(mockConsoleError).not.toHaveBeenCalled()
   })
+
+  it('calls logDebugging with info', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    index.initializeCMP()
+    await index.doesGDPRApply()
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesGDPRApply`)
+  })
 })
 
 describe('index.js: doesCCPAApply', () => {
@@ -249,6 +346,17 @@ describe('index.js: doesCCPAApply', () => {
     index.initializeCMP()
     await index.doesCCPAApply()
     expect(mockConsoleError).not.toHaveBeenCalled()
+  })
+
+  it('calls logDebugging with info', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    index.initializeCMP()
+    await index.doesCCPAApply()
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: doesCCPAApply`)
   })
 })
 
@@ -273,6 +381,17 @@ describe('index.js: openTCFConsentDialog', () => {
     await index.openTCFConsentDialog()
     expect(mockConsoleError).not.toHaveBeenCalled()
   })
+
+  it('calls logDebugging with info', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    index.initializeCMP()
+    await index.openTCFConsentDialog()
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openTCFConsentDialog`)
+  })
 })
 
 describe('index.js: openCCPAConsentDialog', () => {
@@ -295,5 +414,16 @@ describe('index.js: openCCPAConsentDialog', () => {
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     expect(mockConsoleError).not.toHaveBeenCalled()
+  })
+
+  it('calls logDebugging with info', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockConsoleError = jest.fn()
+    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
+    index.initializeCMP()
+    await index.openCCPAConsentDialog()
+    const { logDebugging } = require('src/logger')
+    expect(logDebugging).toHaveBeenLastCalledWith(`TODO: openCCPAConsentDialog`)
   })
 })

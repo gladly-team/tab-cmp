@@ -1,4 +1,5 @@
 import initCMP from 'src/initCMP'
+import { logDebugging, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
 
@@ -8,6 +9,8 @@ const requireCMPInitialized = (func) => (args) => {
   if (!tabCMPInitialized) {
     // We don't want tab-cmp to ever throw. We'd rather it fail
     // silently than disrupt its parent app.
+    // Here, the onError callback won't have been provided, so just
+    // log to console.
     // eslint-disable-next-line no-console
     console.error(
       `[tab-cmp] initializeCMP must be called before calling any other tab-cmp methods.`
@@ -20,12 +23,12 @@ const requireCMPInitialized = (func) => (args) => {
   return func(args)
 }
 
+// TODO: try/catch all code here.
 // TODO: gracefully handle if this code is run on the
 // server side.
 
 export const getCMPHeadScript = requireCMPInitialized(() => {
-  // eslint-disable-next-line no-console
-  console.log(`[tab-cmp] TODO: getCMPHeadScript`)
+  logDebugging(`TODO: getCMPHeadScript`)
 })
 
 export const initializeCMP = async (userOptions) => {
@@ -40,19 +43,20 @@ export const initializeCMP = async (userOptions) => {
   tabCMPInitialized = true
 
   const options = {
+    debug: false,
+    displayPersistentConsentLink: false,
+    onError: () => {},
+    primaryButtonColor: '#9d4ba3',
     publisherName: 'Tab for a Cause',
     publisherLogo:
       'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
-    displayPersistentConsentLink: false,
-    primaryButtonColor: '#9d4ba3',
-    // onError: () => {}, // TODO
     ...userOptions,
   }
 
-  // eslint-disable-next-line no-console
-  console.log(
-    `[tab-cmp] Called initializeCMP with options: ${JSON.stringify(options)}`
-  )
+  // Set up error and debug logging.
+  setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
+
+  logDebugging(`Called initializeCMP with options: ${JSON.stringify(options)}`)
 
   // Determine the client location to know which privacy laws apply.
   let isInUS = false
@@ -64,9 +68,8 @@ export const initializeCMP = async (userOptions) => {
     // eslint-disable-next-line no-empty
   } catch (e) {}
 
-  // eslint-disable-next-line no-console
-  console.log(
-    `[tab-cmp] Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
+  logDebugging(
+    `Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
   )
 
   // Set (as needed) the tab-cmp window variable. Then, set whether
@@ -95,21 +98,17 @@ export const initializeCMP = async (userOptions) => {
 }
 
 export const doesGDPRApply = requireCMPInitialized(async () => {
-  // eslint-disable-next-line no-console
-  console.log(`[tab-cmp] TODO: doesGDPRApply`)
+  logDebugging(`TODO: doesGDPRApply`)
 })
 
 export const doesCCPAApply = requireCMPInitialized(async () => {
-  // eslint-disable-next-line no-console
-  console.log(`[tab-cmp] TODO: doesCCPAApply`)
+  logDebugging(`TODO: doesCCPAApply`)
 })
 
 export const openTCFConsentDialog = requireCMPInitialized(async () => {
-  // eslint-disable-next-line no-console
-  console.log(`[tab-cmp] TODO: openTCFConsentDialog`)
+  logDebugging(`TODO: openTCFConsentDialog`)
 })
 
 export const openCCPAConsentDialog = requireCMPInitialized(async () => {
-  // eslint-disable-next-line no-console
-  console.log(`[tab-cmp] TODO: openCCPAConsentDialog`)
+  logDebugging(`TODO: openCCPAConsentDialog`)
 })

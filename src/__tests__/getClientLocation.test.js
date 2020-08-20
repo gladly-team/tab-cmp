@@ -4,6 +4,7 @@ import MockDate from 'mockdate'
 import { isNil, getCurrentISOString } from 'src/utils'
 
 jest.mock('src/localStorageMgr')
+jest.mock('src/logger')
 
 const mockNow = '2018-05-15T10:30:00.000Z'
 
@@ -330,51 +331,49 @@ describe('client-location: requests and storage', () => {
   })
 })
 
-// TODO
-// eslint-disable-next-line jest/no-commented-out-tests
-// describe('client-location: isInEuropeanUnion', () => {
-// eslint-disable-next-line jest/no-commented-out-tests
-//   it('does not log an error for a typical MaxMind error', async () => {
-//     expect.assertions(1)
-//     const logger = require('js/utils/logger').default
-//
-//     // Suppress expected console error
-//     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-//
-//     // Mock a MaxMind error
-//     mockGeoIP.country.mockImplementationOnce(
-//       (successCallback, failureCallback) => {
-//         return failureCallback({ code: 'HTTP_TIMEOUT' })
-//       }
-//     )
-//
-// const getClientLocation = require('src/getClientLocation').default
-//     try {
-//       await getClientLocation()
-//     } catch (e) {}
-//     expect(logger.error).not.toHaveBeenCalled()
-//   })
-//
-//  eslint-disable-next-line jest/no-commented-out-tests
-//   it('does log an error for a problematic MaxMind error', async () => {
-//     expect.assertions(1)
-//
-//     const logger = require('js/utils/logger').default
-//
-//     // Suppress expected console error
-//     jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-//
-//     // Mock a MaxMind error
-//     mockGeoIP.country.mockImplementationOnce(
-//       (successCallback, failureCallback) => {
-//         return failureCallback({ code: 'OUT_OF_QUERIES' })
-//       }
-//     )
-//
-// const getClientLocation = require('src/getClientLocation').default
-//     try {
-//       await getClientLocation()
-//     } catch (e) {}
-//     expect(logger.error).toHaveBeenCalled()
-//   })
-// })
+describe('client-location: isInEuropeanUnion', () => {
+  it('does not log an error for a typical MaxMind error', async () => {
+    expect.assertions(1)
+    const { logError } = require('src/logger')
+
+    // Suppress expected console error
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+
+    // Mock a MaxMind error
+    mockGeoIP.country.mockImplementationOnce(
+      (successCallback, failureCallback) => {
+        return failureCallback({ code: 'HTTP_TIMEOUT' })
+      }
+    )
+
+    const getClientLocation = require('src/getClientLocation').default
+    try {
+      await getClientLocation()
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+    expect(logError).not.toHaveBeenCalled()
+  })
+
+  it('does log an error for a problematic MaxMind error', async () => {
+    expect.assertions(1)
+
+    const { logError } = require('src/logger')
+
+    // Suppress expected console error
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {})
+
+    // Mock a MaxMind error
+    mockGeoIP.country.mockImplementationOnce(
+      (successCallback, failureCallback) => {
+        return failureCallback({ code: 'OUT_OF_QUERIES' })
+      }
+    )
+
+    const getClientLocation = require('src/getClientLocation').default
+    try {
+      await getClientLocation()
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+    expect(logError).toHaveBeenCalled()
+  })
+})

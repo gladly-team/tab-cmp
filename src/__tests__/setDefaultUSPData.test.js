@@ -1,15 +1,12 @@
+import { logError } from 'src/logger'
+
+jest.mock('src/logger')
+
 beforeEach(() => {
   window.__uspapi = jest.fn()
 })
 
 afterEach(() => {
-  // Reset console mocks.
-  // eslint-disable-next-line no-console
-  if (console.error.mockRestore) {
-    // eslint-disable-next-line no-console
-    console.error.mockRestore()
-  }
-
   jest.clearAllMocks()
 })
 
@@ -81,10 +78,8 @@ describe('setDefaultUSPData', () => {
     expect(calledToSetDefault).toBe(false)
   })
 
-  it('calls console.error if there is a problem setting default USP data', () => {
+  it('calls logError if there is a problem setting default USP data', () => {
     expect.assertions(1)
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     const mockPingResponse = getMockPingResponse()
     const mockPingStatus = true
     window.__uspapi.mockImplementation((cmd, version, callback) => {
@@ -102,7 +97,7 @@ describe('setDefaultUSPData', () => {
     })
     const setDefaultUSPData = require('src/setDefaultUSPData').default
     setDefaultUSPData()
-    expect(mockConsoleError).toHaveBeenCalledWith(
+    expect(logError).toHaveBeenCalledWith(
       '[tab-cmp] Unable to set default USP string.'
     )
   })

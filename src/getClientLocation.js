@@ -9,9 +9,7 @@ import {
   getNumDaysBetweenDates,
   ISOStringToDate,
 } from 'src/utils'
-
-// TODO
-const logger = () => {}
+import { logError } from 'src/logger'
 
 // Local storage keys.
 const STORAGE_PREFIX = 'tabCMP'
@@ -116,7 +114,7 @@ const getLocationFromMaxMind = () => {
         (err) => {
           // Log a subset of errors that we care about to Sentry.
           if (shouldLogMaxMindError(err)) {
-            logger.error(err)
+            logError(err)
           }
           reject(err)
         }
@@ -124,7 +122,7 @@ const getLocationFromMaxMind = () => {
     } catch (err) {
       // Log a subset of errors that we care about to Sentry.
       if (shouldLogMaxMindError(err)) {
-        logger.error(err)
+        logError(err)
       }
       reject(err)
     }

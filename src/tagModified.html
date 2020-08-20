@@ -159,7 +159,8 @@
   var checkIfUspIsReady = function() {
     uspTries++;
     if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
-      console.warn('USP is not accessible');
+      // Gladly modified: add [tab-cmp] prefix.
+      console.warn('[tab-cmp] USP is not accessible.');
     } else {
       clearInterval(uspInterval);
     }
