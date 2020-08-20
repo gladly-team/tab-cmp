@@ -283,8 +283,6 @@ describe('index.js: getCMPHeadScript', () => {
   it('calls logDebugging with info', () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     index.getCMPHeadScript()
     const { logDebugging } = require('src/logger')
@@ -317,8 +315,6 @@ describe('index.js: doesGDPRApply', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.doesGDPRApply()
     const { logDebugging } = require('src/logger')
@@ -351,8 +347,6 @@ describe('index.js: doesCCPAApply', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.doesCCPAApply()
     const { logDebugging } = require('src/logger')
@@ -385,8 +379,6 @@ describe('index.js: openTCFConsentDialog', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.openTCFConsentDialog()
     const { logDebugging } = require('src/logger')
@@ -419,8 +411,6 @@ describe('index.js: openCCPAConsentDialog', () => {
   it('calls logDebugging with info', async () => {
     expect.assertions(1)
     const index = require('src/index')
-    const mockConsoleError = jest.fn()
-    jest.spyOn(console, 'error').mockImplementation(mockConsoleError)
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
