@@ -1,6 +1,6 @@
 {
   "name": "tab-cmp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A wrapper for consent management on Tab for a Cause",
   "main": "build/index.js",
   "repository": "git@github.com:gladly-team/tab-cmp.git",
