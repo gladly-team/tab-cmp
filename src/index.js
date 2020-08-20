@@ -2,8 +2,16 @@ import initCMP from 'src/initCMP'
 import { logDebugging, logError, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
+import isClientSide from 'src/isClientSide'
 
 let tabCMPInitialized = false
+
+const requireClientSide = (func) => (args) => {
+  if (!isClientSide()) {
+    throw new Error(`[tab-cmp] tab-cmp cannot be called server-side.`)
+  }
+  return func(args)
+}
 
 const requireCMPInitialized = (func) => (args) => {
   if (!tabCMPInitialized) {
@@ -37,10 +45,10 @@ const catchAndLogErrors = (func) => async (args) => {
   return result
 }
 
-// TODO: gracefully handle if this code is run on the
-// server side.
+const commonWrapper = (func) =>
+  requireClientSide(requireCMPInitialized(catchAndLogErrors(func)))
 
-export const initializeCMP = async (userOptions = {}) => {
+export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
     // eslint-disable-next-line no-console
@@ -115,34 +123,26 @@ export const initializeCMP = async (userOptions = {}) => {
   } catch (e) {
     logError(e)
   }
-}
+})
 
-export const doesGDPRApply = requireCMPInitialized(
-  catchAndLogErrors(async () => {
-    const { isInEuropeanUnion } = await getClientLocation()
-    logDebugging(`Called doesGDPRApply. Response: ${isInEuropeanUnion}`)
-    return isInEuropeanUnion
-  })
-)
+export const doesGDPRApply = commonWrapper(async () => {
+  const { isInEuropeanUnion } = await getClientLocation()
+  logDebugging(`Called doesGDPRApply. Response: ${isInEuropeanUnion}`)
+  return isInEuropeanUnion
+})
 
-export const doesCCPAApply = requireCMPInitialized(
-  catchAndLogErrors(async () => {
-    const { isInUS } = await getClientLocation()
-    logDebugging(`Called doesCCPAApply. Response: ${isInUS}`)
-    return isInUS
-  })
-)
+export const doesCCPAApply = commonWrapper(async () => {
+  const { isInUS } = await getClientLocation()
+  logDebugging(`Called doesCCPAApply. Response: ${isInUS}`)
+  return isInUS
+})
 
-export const openTCFConsentDialog = requireCMPInitialized(
-  catchAndLogErrors(async () => {
-    logDebugging(`Called openTCFConsentDialog.`)
-    window.__tcfapi('displayConsentUi', 2, () => {})
-  })
-)
+export const openTCFConsentDialog = commonWrapper(async () => {
+  logDebugging(`Called openTCFConsentDialog.`)
+  window.__tcfapi('displayConsentUi', 2, () => {})
+})
 
-export const openCCPAConsentDialog = requireCMPInitialized(
-  catchAndLogErrors(async () => {
-    logDebugging(`Called openCCPAConsentDialog.`)
-    window.__uspapi('displayUspUi')
-  })
-)
+export const openCCPAConsentDialog = commonWrapper(async () => {
+  logDebugging(`Called openCCPAConsentDialog.`)
+  window.__uspapi('displayUspUi')
+})
