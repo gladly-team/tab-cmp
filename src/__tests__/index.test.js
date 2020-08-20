@@ -4,6 +4,7 @@ jest.mock('src/initCMP')
 jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
 jest.mock('src/setDefaultUSPData')
+jest.mock('src/logger')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
@@ -126,6 +127,29 @@ describe('index.js: initializeCMP', () => {
       primaryButtonColor: '#9d4ba3',
       publisherName: 'My Site',
       publisherLogo: undefined,
+    })
+  })
+
+  it('sets up logging using default options when none are provided', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const { setUpLogger } = require('src/logger')
+    expect(setUpLogger).toHaveBeenCalledWith({
+      debug: false,
+      onErrorCallback: expect.any(Function),
+    })
+  })
+
+  it('sets up logging using provided options', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    const mockOnErrCb = () => {}
+    await index.initializeCMP({ debug: true, onError: mockOnErrCb })
+    const { setUpLogger } = require('src/logger')
+    expect(setUpLogger).toHaveBeenCalledWith({
+      debug: true,
+      onErrorCallback: mockOnErrCb,
     })
   })
 
