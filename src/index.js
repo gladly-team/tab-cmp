@@ -46,7 +46,7 @@ export const getCMPHeadScript = requireCMPInitialized(
   })
 )
 
-export const initializeCMP = async (userOptions) => {
+export const initializeCMP = async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
     // eslint-disable-next-line no-console
@@ -68,48 +68,59 @@ export const initializeCMP = async (userOptions) => {
     ...userOptions,
   }
 
-  // Set up error and debug logging.
-  setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
-
-  logDebugging(`Called initializeCMP with options: ${JSON.stringify(options)}`)
-
-  // Determine the client location to know which privacy laws apply.
-  let isInUS = false
-  let isInEuropeanUnion = false
   try {
-    ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
-    // If client location determination fails, default to no GDPR/CCPA,
-    // which will fall back on IP geolocation in calls to ad partners.
-    // eslint-disable-next-line no-empty
-  } catch (e) {}
+    // Set up error and debug logging.
+    setUpLogger({ debug: options.debug, onErrorCallback: options.onError })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(`[tab-cmp] Failed to set up logger.`, e)
+  }
 
-  logDebugging(
-    `Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
-  )
+  try {
+    logDebugging(
+      `Called initializeCMP with options: ${JSON.stringify(options)}`
+    )
 
-  // Set (as needed) the tab-cmp window variable. Then, set whether
-  // GDPR and CCPA apply, if not set already. We use these values
-  // in the modified version of the Quantcast Choice CMP JS.
-  window.tabCMP = window.tabCMP || {}
-  window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
-    window.tabCMP,
-    'doesGDPRApply'
-  )
-    ? window.tabCMP.doesGDPRApply
-    : isInEuropeanUnion
-  window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
-    window.tabCMP,
-    'doesCCPAApply'
-  )
-    ? window.tabCMP.doesCCPAApply
-    : isInUS
+    // Determine the client location to know which privacy laws apply.
+    let isInUS = false
+    let isInEuropeanUnion = false
+    try {
+      ;({ isInUS, isInEuropeanUnion } = await getClientLocation())
+      // If client location determination fails, default to no GDPR/CCPA,
+      // which will fall back on IP geolocation in calls to ad partners.
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
-  // Initialize our modified version of Quantcast Choice.
-  initCMP(options)
+    logDebugging(
+      `Client location. isInEU: ${isInEuropeanUnion}. isInUS: ${isInUS}`
+    )
 
-  // We need to set the default USP data, which QC Choice does
-  // not do automatically.
-  setDefaultUSPData()
+    // Set (as needed) the tab-cmp window variable. Then, set whether
+    // GDPR and CCPA apply, if not set already. We use these values
+    // in the modified version of the Quantcast Choice CMP JS.
+    window.tabCMP = window.tabCMP || {}
+    window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
+      window.tabCMP,
+      'doesGDPRApply'
+    )
+      ? window.tabCMP.doesGDPRApply
+      : isInEuropeanUnion
+    window.tabCMP.doesCCPAApply = Object.prototype.hasOwnProperty.call(
+      window.tabCMP,
+      'doesCCPAApply'
+    )
+      ? window.tabCMP.doesCCPAApply
+      : isInUS
+
+    // Initialize our modified version of Quantcast Choice.
+    initCMP(options)
+
+    // We need to set the default USP data, which QC Choice does
+    // not do automatically.
+    setDefaultUSPData()
+  } catch (e) {
+    logError(e)
+  }
 }
 
 export const doesGDPRApply = requireCMPInitialized(
