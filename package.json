@@ -24,7 +24,7 @@
     "quantcast:choice-js:download": "curl https://quantcast.mgr.consensu.org/choice/FPBLJYpJgR9Zu/tab.gladly.dev/choice.js > ./quantcast/qcChoiceOriginal.js",
     "quantcast:choice-js:format": "eslint ./quantcast/qcChoiceOriginal.js --fix --no-ignore; exit 0",
     "quantcast:cmp-js:download": "curl https://quantcast.mgr.consensu.org/tcfv2/11/cmp2.js > ./quantcast/qcCmpOriginal.js",
-    "quantcast:cmp-js:copy-with-edits": "sed -E 's/SameSite=Lax;secure/SameSite=None;secure/g; s/_isUserInUS=(true|false)/_isUserInUS=window.tabCMP.doesCCPAApply/g; s/_isUserInEU=(true|false)/_isUserInEU=window.tabCMP.doesGDPRApply/g; s/this action will make it harder to us to tailor content/this action will make it harder for us to tailor content/g;' ./quantcast/qcCmpOriginal.js > ./src/qcCmpModified.js",
+    "quantcast:cmp-js:copy-with-edits": "sed -E 's/SameSite=Lax;secure/SameSite=None;secure/g; s/_isUserInUS=(true|false)/_isUserInUS=window.tabCMP.doesCCPAApply/g; s/_isUserInEU=(true|false)/_isUserInEU=window.tabCMP.doesGDPRApply/g;' ./quantcast/qcCmpOriginal.js > ./src/qcCmpModified.js",
     "dev:publish": "npm-run-all -s build dev:yalc-publish-push",
     "dev:yalc-publish-push": "yalc publish --push"
   },
