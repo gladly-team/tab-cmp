@@ -146,3 +146,11 @@ export const openCCPAConsentDialog = commonWrapper(async () => {
   logDebugging(`Called openCCPAConsentDialog.`)
   window.__uspapi('displayUspUi')
 })
+
+export default {
+  initializeCMP,
+  doesGDPRApply,
+  doesCCPAApply,
+  openTCFConsentDialog,
+  openCCPAConsentDialog,
+}

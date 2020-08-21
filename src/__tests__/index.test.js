@@ -48,6 +48,16 @@ const getMockOptions = () => ({
 })
 
 describe('index.js:', () => {
+  it('defines a default export with expected methods', () => {
+    expect.assertions(5)
+    const index = require('src/index').default
+    expect(index.initializeCMP).toBeDefined()
+    expect(index.doesGDPRApply).toBeDefined()
+    expect(index.doesCCPAApply).toBeDefined()
+    expect(index.openTCFConsentDialog).toBeDefined()
+    expect(index.openCCPAConsentDialog).toBeDefined()
+  })
+
   it('defines initializeCMP', () => {
     expect.assertions(1)
     const index = require('src/index')
