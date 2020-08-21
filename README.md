@@ -8,7 +8,7 @@ A wrapper for the Consent Management Platform used on [Tab for a Cause](https://
 
 ## Get Started
 
-TODO: how to add this to a project
+TODO: how to add this to a project.
 
 ## API
 
