@@ -97,7 +97,10 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
-TODO
+* The request to Google Ad Manager includes the USP string. The `us_privacy` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should be `1YYN`.
+  - [ ] top frame
+  - [ ] iframed new tab
+* TODO
 
 ### EU/GDPR
 **Basic CMP functionality**
