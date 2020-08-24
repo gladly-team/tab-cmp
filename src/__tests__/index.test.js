@@ -6,6 +6,7 @@ jest.mock('src/qcCmpModified')
 jest.mock('src/setDefaultUSPData')
 jest.mock('src/logger')
 jest.mock('src/isClientSide')
+jest.mock('src/utils')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
@@ -19,6 +20,8 @@ beforeEach(() => {
   })
   const isClientSide = require('src/isClientSide').default
   isClientSide.mockReturnValue(true)
+  const { getURL } = require('src/utils')
+  getURL.mockReturnValue('https://example.com/foo/bar/')
 })
 
 afterEach(() => {
@@ -227,6 +230,38 @@ describe('index.js: initializeCMP', () => {
       primaryButtonColor: '#9d4ba3',
       publisherName: 'My Site',
       publisherLogo: undefined,
+    })
+  })
+
+  it('sets debug === true when the URL param tabCMPDebug is true', async () => {
+    expect.assertions(1)
+    const { getURL } = require('src/utils')
+    getURL.mockReturnValue(
+      'https://example.com/foo/bar?abc=123&tabCMPDebug=true'
+    )
+    const index = require('src/index')
+    await index.initializeCMP({
+      debug: false,
+    })
+    const initCMP = require('src/initCMP').default
+    expect(initCMP.mock.calls[0][0]).toMatchObject({
+      debug: true,
+    })
+  })
+
+  it('does not set debug === true when the URL param tabCMPDebug is false', async () => {
+    expect.assertions(1)
+    const { getURL } = require('src/utils')
+    getURL.mockReturnValue(
+      'https://example.com/foo/bar?abc=123&tabCMPDebug=false'
+    )
+    const index = require('src/index')
+    await index.initializeCMP({
+      debug: false,
+    })
+    const initCMP = require('src/initCMP').default
+    expect(initCMP.mock.calls[0][0]).toMatchObject({
+      debug: false,
     })
   })
 
