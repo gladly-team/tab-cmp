@@ -68,6 +68,8 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
   ```
   The `uspString` property value should be `1YNN`.
+  
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
   
@@ -76,15 +78,21 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
    __tcfapi('getTCData', 2, (tcData, success) => { console.log('cmp responded:', tcData, success)})
    ```
    The `gdprApplies` property value should be `false`.
+   
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
  
 **CMP Consent Dialog**
 * The user's account page should show a "Do Not Show My Info" link that opens the CCPA dialog.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
 * The user's choice should persist. Open the dialog, opt out of data sale, and save. Refresh the app, open the dialog, and confirm you are still opted out.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
@@ -93,11 +101,15 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
   ```
   The `uspString` property value should be `1YYN`.
+  
+    Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
 * The request to Google Ad Manager includes the USP string. The `us_privacy` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should be `1YYN`.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
@@ -112,6 +124,8 @@ Start  by clearing the CMP data, then consenting to data usage.
   __tcfapi('getTCData', 2, (tcData, success) => { console.log('cmp responded:', tcData, success)})
   ```
   The `gdprApplies` property value should be `true`, and the `tcString` and `addtlConsent` properties should be set.
+  
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
   
@@ -120,6 +134,8 @@ Start  by clearing the CMP data, then consenting to data usage.
    __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
    ```
    The `uspString` property value should be `1---`.
+   
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
  
@@ -129,20 +145,28 @@ Start  by clearing the CMP data, then consenting to data usage.
   * Ensure the dialog appears.
   * Choose some custom data use consents and save.
   * Refresh the page and ensure the dialog does *not* reappear.
+  ####
   
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
 * The user's account page should show a "Privacy Options" button that opens the GDPR dialog. Opening it should show the options you previously selected.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
 * The user's choices should persist. Open the dialog, change your options, and save. Refresh the app, open the dialog, and confirm your changes are still there.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
 * The request to Google Ad Manager includes the USP string. The `gdpr_consent` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should match the value of the `euconsent-v2` cookie.
+
+  Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
