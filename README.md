@@ -79,3 +79,26 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] top frame
   - [ ] iframed new tab
  
+**CMP Consent Dialog**
+* The user's account page should show a "Do Not Show My Info" link that opens the CCPA dialog.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* The user's choice should persist. Open the dialog, opt out of data sale, and save. Refresh the app, open the dialog, and confirm you are still opted out.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* After opting out of data sale, the USP string changes. Run:
+   ```js
+  __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
+  ```
+  The `uspString` property value should be `1YYN`.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+**Ad Partner Behavior**
+TODO
+
+### EU/GDPR
+**Basic CMP functionality**
+TODO
