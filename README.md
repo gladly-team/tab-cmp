@@ -57,6 +57,25 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
 #### Within an Iframe
 * Open a new tab page with the Tab for a Cause browser extension enabled.
 * If testing non-production versions of the app, manually modify the iframe `src` to use that domain. To refresh, modify the `src` rather than refreshing the top-level page.
+* When testing CMP APIs, do so from the app frame, not the top-level extension frame.
 
 ## Test Checklist
-TODO
+
+### US/CCPA
+**Basic CMP functionality**
+* A new user has the expected default privacy string. Clear the CMP data, then run:
+  ```js
+  __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
+  ```
+  The `uspString` property value should be `1YNN`.
+  - [ ] top frame
+  - [ ] iframed new tab
+  
+* GDPR should not apply. Run:
+   ```js
+   __tcfapi('getTCData', 2, (tcData, success) => { console.log('cmp responded:', tcData, success)})
+   ```
+   The `gdprApplies` property value should be `false`.
+  - [ ] top frame
+  - [ ] iframed new tab
+ 
