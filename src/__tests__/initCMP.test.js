@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle:0 */
 
 import { setUpQuantcastChoice } from 'src/qcChoiceModified'
-import { logDebugging } from 'src/logger'
 
 jest.mock('src/logger')
 jest.mock('src/qcChoiceModified')
