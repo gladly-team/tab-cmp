@@ -89,7 +89,7 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] iframed new tab
 
 * After opting out of data sale, the USP string changes. Run:
-   ```js
+  ```js
   __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
   ```
   The `uspString` property value should be `1YYN`.
@@ -100,8 +100,51 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
 * The request to Google Ad Manager includes the USP string. The `us_privacy` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should be `1YYN`.
   - [ ] top frame
   - [ ] iframed new tab
-* TODO
+
+* TODO: inspect additional ad partner requests
 
 ### EU/GDPR
 **Basic CMP functionality**
-TODO
+Start  by clearing the CMP data, then consenting to data usage.
+
+* The CMP responds with expected data. Run:
+  ```js
+  __tcfapi('getTCData', 2, (tcData, success) => { console.log('cmp responded:', tcData, success)})
+  ```
+  The `gdprApplies` property value should be `true`, and the `tcString` and `addtlConsent` properties should be set.
+  - [ ] top frame
+  - [ ] iframed new tab
+  
+* CCPA should not apply. Run:
+   ```js
+   __uspapi("getUSPData", 1, (uspData, success) => { console.log('cmp responded:', uspData, success)})
+   ```
+   The `uspString` property value should be `1---`.
+  - [ ] top frame
+  - [ ] iframed new tab
+ 
+**CMP Consent Dialog**
+* The consent dialog appears on first use.
+  * Clear the CMP data, then refresh the page.
+  * Ensure the dialog appears.
+  * Choose some custom data use consents and save.
+  * Refresh the page and ensure the dialog does *not* reappear.
+  
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* The user's account page should show a "Privacy Options" button that opens the GDPR dialog. Opening it should show the options you previously selected.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* The user's choices should persist. Open the dialog, change your options, and save. Refresh the app, open the dialog, and confirm your changes are still there.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+**Ad Partner Behavior**
+* The request to Google Ad Manager includes the USP string. The `gdpr_consent` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should match the value of the `euconsent-v2` cookie.
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* TODO: inspect additional ad partner requests
+
