@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle:0 */
 
 import { setUpQuantcastChoice } from 'src/qcChoiceModified'
-import { logDebugging } from 'src/logger'
 
 jest.mock('src/logger')
 jest.mock('src/qcChoiceModified')
@@ -29,16 +28,6 @@ describe('initCMP', () => {
     expect.assertions(1)
     const initCMP = require('src/initCMP').default
     expect(initCMP).toBeDefined()
-  })
-
-  it('calls logDebugging', () => {
-    expect.assertions(1)
-    const initCMP = require('src/initCMP').default
-    const opts = getMockOptions()
-    initCMP(opts)
-    expect(logDebugging).toHaveBeenCalledWith(
-      `Called initCMP with options: ${JSON.stringify(opts)}`
-    )
   })
 
   it('calls setUpQuantcastChoice', () => {

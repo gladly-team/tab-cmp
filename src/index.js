@@ -3,6 +3,7 @@ import { logDebugging, logError, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
 import isClientSide from 'src/isClientSide'
+import { getURL } from 'src/utils'
 
 let tabCMPInitialized = false
 
@@ -48,6 +49,20 @@ const catchAndLogErrors = (func) => async (args) => {
 const commonWrapper = (func) =>
   requireClientSide(requireCMPInitialized(catchAndLogErrors(func)))
 
+const isDebugParamSet = () => {
+  let isDebug = false
+  try {
+    const urlStr = getURL()
+    const url = new URL(urlStr)
+    const tabCMPDebug = url.searchParams.get('tabCMPDebug')
+    isDebug = tabCMPDebug === 'true'
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
+  return isDebug
+}
+
 export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
@@ -60,7 +75,6 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   tabCMPInitialized = true
 
   const options = {
-    debug: false,
     displayPersistentConsentLink: false,
     onError: () => {},
     primaryButtonColor: '#9d4ba3',
@@ -68,6 +82,7 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
     publisherLogo:
       'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
     ...userOptions,
+    debug: isDebugParamSet() ? true : userOptions.debug || false,
   }
 
   try {
@@ -79,9 +94,7 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   }
 
   try {
-    logDebugging(
-      `Called initializeCMP with options: ${JSON.stringify(options)}`
-    )
+    logDebugging(`Called initializeCMP with options:`, options)
 
     // Determine the client location to know which privacy laws apply.
     let isInUS = false

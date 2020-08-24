@@ -22,6 +22,11 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
+const prefix = [
+  '%ctab-cmp',
+  'background: #7c7c7c; color: #fff; border-radius: 2px; padding: 2px 6px',
+]
+
 describe('logger: setUpLogger', () => {
   it('does not throw', () => {
     expect.assertions(1)
@@ -45,10 +50,7 @@ describe('logger: logDebugging', () => {
       debug: true,
     })
     logDebugging('something here')
-    expect(console.log).toHaveBeenCalledWith(
-      '[tab-cmp] [debug]:',
-      'something here'
-    )
+    expect(console.log).toHaveBeenCalledWith(...prefix, 'something here')
   })
 
   it('does not log to console when debug is not enabled', () => {
@@ -73,7 +75,7 @@ describe('logger: logDebugging', () => {
     })
     logDebugging('something here', { a: 123 }, 'more info here')
     expect(console.log).toHaveBeenCalledWith(
-      '[tab-cmp] [debug]:',
+      ...prefix,
       'something here',
       { a: 123 },
       'more info here'
@@ -105,7 +107,7 @@ describe('logger: logError', () => {
     })
     const mockErr = new Error('Uh oh!')
     logError(mockErr)
-    expect(mockConsoleError).toHaveBeenCalledWith(mockErr)
+    expect(mockConsoleError).toHaveBeenCalledWith(...prefix, mockErr)
   })
 
   it('calls the onError callback when logError is called', () => {

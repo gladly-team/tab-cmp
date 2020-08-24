@@ -16,3 +16,5 @@ export const getNumDaysBetweenDates = (dateA, dateB) => {
   const msInDay = 1000 * 60 * 60 * 24
   return (dateA - dateB) / msInDay
 }
+
+export const getURL = () => window.location.href
