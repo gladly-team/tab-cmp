@@ -25,18 +25,27 @@ We'll want to test
 2. the CMP UI consent dialogs
 3. the integration with ad partners
 
-in each combination of
+for each combination of
 * privacy context (GDPR/EU or CCPA/US)
-* frame context (as a top-level frame or in the new tab page iframe)
+* frame context (as a top-level frame or in the new tab page iframe).
+
+This section has info on how to set up these test contexts.
+
+### Clearing Existing Data
+
+To reset CMP state:
+* delete `tabCMP*` local storage values
+* delete the following coookies: `euconsent-v2`, `usprivacy`, `addtl_consent`
+* if using unmodified Quantcast Choice, which we are not currently doing, clear the browser cache after changing VPNs to ensure the geolocation is updated
 
 ### How to Set Geolocation
 
 #### EU/GDPR
-* In our app's local storage, ensure `tabCMP.clientLocation.isInEU` has a value of `true` and `tabCMP.clientLocation.countryISOCode` has a value of `FR` (or some other EU country ISO code).
+* In local storage, ensure `tabCMP.clientLocation.isInEU` has a value of `true` and `tabCMP.clientLocation.countryISOCode` has a value of `FR` (or some other EU country ISO code).
 * Enable a VPN into that country so our ad partners behave as they will with EU traffic. The Outline app with AWS Lightsail serves as a functional VPN.
 
 #### US/CCPA
-* In our app's local storage, ensure `tabCMP.clientLocation.isInEU` has a value of `false` and `tabCMP.clientLocation.countryISOCode` has a value of `US`.
+* In local storage, ensure `tabCMP.clientLocation.isInEU` has a value of `false` and `tabCMP.clientLocation.countryISOCode` has a value of `US`.
 * If you're not in the US, enable a VPN into the US.
 
 ### How to Set Frame Context
