@@ -79,9 +79,7 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   }
 
   try {
-    logDebugging(
-      `Called initializeCMP with options: ${JSON.stringify(options)}`
-    )
+    logDebugging(`Called initializeCMP with options:`, options)
 
     // Determine the client location to know which privacy laws apply.
     let isInUS = false

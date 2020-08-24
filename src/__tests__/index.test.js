@@ -156,7 +156,8 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP(opts)
     const { logDebugging } = require('src/logger')
     expect(logDebugging).toHaveBeenCalledWith(
-      `Called initializeCMP with options: ${JSON.stringify(opts)}`
+      `Called initializeCMP with options:`,
+      opts
     )
   })
 

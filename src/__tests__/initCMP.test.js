@@ -31,16 +31,6 @@ describe('initCMP', () => {
     expect(initCMP).toBeDefined()
   })
 
-  it('calls logDebugging', () => {
-    expect.assertions(1)
-    const initCMP = require('src/initCMP').default
-    const opts = getMockOptions()
-    initCMP(opts)
-    expect(logDebugging).toHaveBeenCalledWith(
-      `Called initCMP with options: ${JSON.stringify(opts)}`
-    )
-  })
-
   it('calls setUpQuantcastChoice', () => {
     expect.assertions(1)
     const initCMP = require('src/initCMP').default
