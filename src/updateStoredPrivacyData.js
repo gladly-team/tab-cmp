@@ -12,6 +12,9 @@ const updateStoredPrivacyData = () => {
 
     // TCF/GDPR
     if (typeof window.__tcfapi === 'function') {
+      // It's critical Quantcast Choice is loaded before we sync.
+      // Otherwise, we'd be receiving our own local storage data
+      // when trying to update local storage data.
       window.__tcfapi('getTCData', 2, (tcData, success) => {
         if (success && tcData) {
           localStorage.setItem(TCF_LOCAL_DATA_KEY, JSON.stringify(tcData))
@@ -34,20 +37,31 @@ const updateStoredPrivacyData = () => {
       )
     }
 
-    // FIXME: need to make sure CMP is loaded first. Use ping?
     // USP/CCPA
     if (typeof window.__uspapi === 'function') {
-      window.__uspapi('getUSPData', 1, (uspData, success) => {
-        if (success && uspData) {
-          localStorage.setItem(USP_LOCAL_DATA_KEY, JSON.stringify(uspData))
-          logDebugging(
-            `Successfully updated USP local storage data. Value:`,
-            uspData
-          )
+      // The ping ensures Quantcast Choice is loaded before we sync
+      // USP data. It's important our modified USP stub does not
+      // handle uspPing; otherwise, we'd be receiving our own local
+      // storage data when trying to update local storage data.
+      window.__uspapi('uspPing', 1, (_, status) => {
+        if (status) {
+          window.__uspapi('getUSPData', 1, (uspData, success) => {
+            if (success && uspData) {
+              localStorage.setItem(USP_LOCAL_DATA_KEY, JSON.stringify(uspData))
+              logDebugging(
+                `Successfully updated USP local storage data. Value:`,
+                uspData
+              )
+            } else {
+              logDebugging(
+                `Could not update USP local storage data. The CMP errored and provided these data:`,
+                uspData
+              )
+            }
+          })
         } else {
           logDebugging(
-            `Could not update USP local storage data. The CMP errored and provided these data:`,
-            uspData
+            `Could not update USP local storage data. The CMP errored.`
           )
         }
       })
