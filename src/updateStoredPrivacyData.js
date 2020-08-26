@@ -1,3 +1,4 @@
+import localStorageMgr from 'src/localStorageMgr'
 import { logDebugging, logError } from 'src/logger'
 
 const TCF_LOCAL_DATA_KEY = 'tabCMP.tcfv2.data'
@@ -17,7 +18,7 @@ const updateStoredPrivacyData = () => {
       // when trying to update local storage data.
       window.__tcfapi('getTCData', 2, (tcData, success) => {
         if (success && tcData) {
-          localStorage.setItem(TCF_LOCAL_DATA_KEY, JSON.stringify(tcData))
+          localStorageMgr.setItem(TCF_LOCAL_DATA_KEY, JSON.stringify(tcData))
           logDebugging(
             `Successfully updated TCF local storage data. Value:`,
             tcData
@@ -47,7 +48,10 @@ const updateStoredPrivacyData = () => {
         if (status) {
           window.__uspapi('getUSPData', 1, (uspData, success) => {
             if (success && uspData) {
-              localStorage.setItem(USP_LOCAL_DATA_KEY, JSON.stringify(uspData))
+              localStorageMgr.setItem(
+                USP_LOCAL_DATA_KEY,
+                JSON.stringify(uspData)
+              )
               logDebugging(
                 `Successfully updated USP local storage data. Value:`,
                 uspData
