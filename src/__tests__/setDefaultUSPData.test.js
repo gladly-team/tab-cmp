@@ -1,4 +1,5 @@
 import { logDebugging, logError } from 'src/logger'
+import { getMockUSPPingResponse } from 'src/test-utils'
 
 jest.mock('src/logger')
 
@@ -8,13 +9,6 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.clearAllMocks()
-})
-
-const getMockPingResponse = () => ({
-  cmpLoaded: true,
-  jurisdiction: ['US'],
-  location: 'US',
-  mode: ['GDPR', 'USP'],
 })
 
 describe('setDefaultUSPData', () => {
@@ -29,7 +23,7 @@ describe('setDefaultUSPData', () => {
 
   it('calls setUspDftData when there is no error and the user is in the US jurisdiction', () => {
     expect.assertions(1)
-    const mockPingResponse = getMockPingResponse()
+    const mockPingResponse = getMockUSPPingResponse()
     const mockPingStatus = true
     let calledToSetDefault = false
     window.__uspapi.mockImplementation((cmd, version, callback) => {
@@ -53,7 +47,7 @@ describe('setDefaultUSPData', () => {
 
   it('calls logDebugging when there is no error and the user is in the US jurisdiction', () => {
     expect.assertions(1)
-    const mockPingResponse = getMockPingResponse()
+    const mockPingResponse = getMockUSPPingResponse()
     const mockPingStatus = true
     window.__uspapi.mockImplementation((cmd, version, callback) => {
       switch (cmd) {
@@ -78,7 +72,7 @@ describe('setDefaultUSPData', () => {
   it('does not call setUspDftData the user is not in the US', () => {
     expect.assertions(1)
     const mockPingResponse = {
-      ...getMockPingResponse(),
+      ...getMockUSPPingResponse(),
       location: 'FR',
     }
     const mockPingStatus = true
@@ -105,7 +99,7 @@ describe('setDefaultUSPData', () => {
   it('calls logDebugging when the user is not in the US', () => {
     expect.assertions(1)
     const mockPingResponse = {
-      ...getMockPingResponse(),
+      ...getMockUSPPingResponse(),
       location: 'FR',
     }
     const mockPingStatus = true
@@ -131,7 +125,7 @@ describe('setDefaultUSPData', () => {
 
   it('calls logError if there is a problem setting default USP data', () => {
     expect.assertions(1)
-    const mockPingResponse = getMockPingResponse()
+    const mockPingResponse = getMockUSPPingResponse()
     const mockPingStatus = true
     window.__uspapi.mockImplementation((cmd, version, callback) => {
       switch (cmd) {
