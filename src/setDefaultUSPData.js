@@ -12,7 +12,7 @@ const setDefaultUSPData = () => {
       ) {
         window.__uspapi('setUspDftData', 1, (_, newStatus) => {
           if (!newStatus) {
-            logError('[tab-cmp] Unable to set default USP string.')
+            logError(new Error('[tab-cmp] Unable to set default USP string.'))
           }
         })
       }

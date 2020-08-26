@@ -98,7 +98,7 @@ describe('setDefaultUSPData', () => {
     const setDefaultUSPData = require('src/setDefaultUSPData').default
     setDefaultUSPData()
     expect(logError).toHaveBeenCalledWith(
-      '[tab-cmp] Unable to set default USP string.'
+      new Error('[tab-cmp] Unable to set default USP string.')
     )
   })
 })
