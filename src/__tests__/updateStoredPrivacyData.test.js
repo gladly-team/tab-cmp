@@ -11,37 +11,7 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-// const getMockPingResponse = () => ({
-//   cmpLoaded: true,
-//   jurisdiction: ['US'],
-//   location: 'US',
-//   mode: ['GDPR', 'USP'],
-// })
-
-describe('updateStoredPrivacyData', () => {
-  it('does not throw if window.__uspapi is undefined', () => {
-    expect.assertions(1)
-    delete window.__uspapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
-    expect(() => {
-      updateStoredPrivacyData()
-    }).not.toThrow()
-  })
-
-  it('logs an error if window.__uspapi is undefined', () => {
-    expect.assertions(1)
-    delete window.__uspapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
-    updateStoredPrivacyData()
-    expect(logError).toHaveBeenCalledWith(
-      new Error(
-        '[tab-cmp] Could not update USP local storage data. window.__uspapi is not defined.'
-      )
-    )
-  })
-
+describe('updateStoredPrivacyData: TCF', () => {
   it('does not throw if window.__tcfapi is undefined', () => {
     expect.assertions(1)
     delete window.__tcfapi
@@ -66,4 +36,27 @@ describe('updateStoredPrivacyData', () => {
   })
 })
 
-// TODO: more tests
+describe('updateStoredPrivacyData: USP', () => {
+  it('does not throw if window.__uspapi is undefined', () => {
+    expect.assertions(1)
+    delete window.__uspapi
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    expect(() => {
+      updateStoredPrivacyData()
+    }).not.toThrow()
+  })
+
+  it('logs an error if window.__uspapi is undefined', () => {
+    expect.assertions(1)
+    delete window.__uspapi
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(logError).toHaveBeenCalledWith(
+      new Error(
+        '[tab-cmp] Could not update USP local storage data. window.__uspapi is not defined.'
+      )
+    )
+  })
+})
