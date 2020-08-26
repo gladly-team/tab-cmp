@@ -4,6 +4,7 @@ jest.mock('src/initCMP')
 jest.mock('src/getClientLocation')
 jest.mock('src/qcCmpModified')
 jest.mock('src/setDefaultUSPData')
+jest.mock('src/updateStoredPrivacyData')
 jest.mock('src/logger')
 jest.mock('src/isClientSide')
 jest.mock('src/utils')
@@ -196,6 +197,15 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     const setDefaultUSPData = require('src/setDefaultUSPData').default
     expect(setDefaultUSPData).toHaveBeenCalled()
+  })
+
+  it('calls updateStoredPrivacyData', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    expect(updateStoredPrivacyData).toHaveBeenCalled()
   })
 
   it('passes default options to initCMP when no options are provided', async () => {

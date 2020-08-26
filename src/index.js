@@ -2,6 +2,7 @@ import initCMP from 'src/initCMP'
 import { logDebugging, logError, setUpLogger } from 'src/logger'
 import getClientLocation from 'src/getClientLocation'
 import setDefaultUSPData from 'src/setDefaultUSPData'
+import updateStoredPrivacyData from 'src/updateStoredPrivacyData'
 import isClientSide from 'src/isClientSide'
 import { getURL } from 'src/utils'
 
@@ -133,6 +134,9 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
     // We need to set the default USP data, which QC Choice does
     // not do automatically.
     setDefaultUSPData()
+
+    // Sync our TCF/USP data in local storage to the CMP.
+    updateStoredPrivacyData()
   } catch (e) {
     logError(e)
   }

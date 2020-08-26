@@ -24,6 +24,26 @@ try {
 
     // firstScript.parentNode.insertBefore(element, firstScript);
 
+    // Gladly modified.
+    // Add debug logging.
+    let debug = false
+    try {
+      const urlStr = window.location.href
+      const url = new URL(urlStr)
+      const tabCMPDebug = url.searchParams.get('tabCMPDebug')
+      debug = tabCMPDebug === 'true'
+    } catch (e) {}
+    const logPrefix = [
+          '%ctab-cmp',
+          'background: #7c7c7c; color: #fff; border-radius: 2px; padding: 2px 6px',
+          '[head script]'
+        ]
+    const logDebugging = (...args) => {
+      if (debug) {
+        console.log(...logPrefix, ...args)
+      }
+    }
+
     function makeStub() {
       var TCF_LOCATOR_NAME = '__tcfapiLocator';
       var queue = [];
@@ -51,6 +71,32 @@ try {
       function tcfAPIHandler() {
         var gdprApplies;
         var args = arguments;
+
+        // Gladly modified.
+        try {
+          if (!args.length) {
+            return queue
+          }
+          // Our modified code should handle some API calls for TCF v2.
+          const shouldHandle =
+            ['getTCData', 'ping', 'addEventListener'].indexOf(args[0]) > -1 &&
+            args[1] === 2 &&
+            typeof args[2] === 'function'
+          if (shouldHandle) {
+            // This item is set and updated in tab-cmp.
+            const storedTCFData = JSON.parse(localStorage.getItem('tabCMP.tcfv2.data'))
+            if (storedTCFData) {
+              const cb = args[2]
+              logDebugging(`Responding to modified TCF API call "${args[0]}" with stored TCF data:`, storedTCFData)
+              cb(storedTCFData, true)
+              return
+            } else {
+              logDebugging(`No stored TCF data. Modified TCF stub is not handling a call to "${args[0]}"`)
+            }
+          } 
+        } catch (e) {
+          console.error('[tab-cmp]', e)
+        }
 
         if (!args.length) {
           return queue;
@@ -150,6 +196,35 @@ try {
 
     var uspStubFunction = function() {
       var arg = arguments;
+
+      // Gladly modified.
+      try {
+        if (!arg.length) {
+          return queue
+        }
+        // Our modified code should handle some API calls for USP v1.
+        const shouldHandle =
+          arg[0] === 'getUSPData' &&
+          arg[1] === 1 &&
+          typeof arg[2] === 'function'
+        if (shouldHandle) {
+          // This item is set and updated in tab-cmp.
+          const storedUSPData = JSON.parse(localStorage.getItem('tabCMP.usp.data'))
+          if (storedUSPData) {
+            const cb = arg[2]
+            logDebugging(`Responding to modified USP API call "${arg[0]}" with stored USP data:`, storedUSPData)
+            cb(storedUSPData, true)
+            return
+          } else {
+            logDebugging(`No stored USP data. Modified USP stub is not handling a call to "${arg[0]}"`)
+          }
+        } else {
+          logDebugging(`Modified USP stub is not handling a call to "${arg[0]}".`)
+        }
+      } catch (e) {
+        console.error('[tab-cmp]', e)
+      }
+
       if (typeof window.__uspapi !== uspStubFunction) {
         setTimeout(function() {
           if (typeof window.__uspapi !== 'undefined') {
@@ -163,7 +238,7 @@ try {
       uspTries++;
       if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
         // Gladly modified: add [tab-cmp] prefix.
-        console.warn('[tab-cmp] USP is not accessible.');
+        console.error(...logPrefix, 'USP is not accessible.');
       } else {
         clearInterval(uspInterval);
       }

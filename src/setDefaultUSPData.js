@@ -1,4 +1,4 @@
-import { logError } from 'src/logger'
+import { logDebugging, logError } from 'src/logger'
 
 // If no USP data is set, then set it to a default value.
 // https://help.quantcast.com/hc/en-us/articles/360047078534-Choice-CMP2-CCPA-API-Index-TCF-v2-0-
@@ -12,9 +12,13 @@ const setDefaultUSPData = () => {
       ) {
         window.__uspapi('setUspDftData', 1, (_, newStatus) => {
           if (!newStatus) {
-            logError('[tab-cmp] Unable to set default USP string.')
+            logError(new Error('[tab-cmp] Unable to set default USP string.'))
+          } else {
+            logDebugging('Successfully set default USP data.')
           }
         })
+      } else {
+        logDebugging('Not setting default USP data. User is not in the US.')
       }
     })
   }
