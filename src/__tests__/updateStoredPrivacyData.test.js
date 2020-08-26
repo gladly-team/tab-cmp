@@ -1,6 +1,8 @@
 import { logDebugging, logError } from 'src/logger'
 import localStorageMgr from 'src/localStorageMgr'
 import {
+  getMockUSPDataInUS,
+  getMockUSPDataNonUS,
   getMockUSPPingResponse,
   getMockTCFDataInEU,
   getMockTCFDataNonEU,
@@ -148,6 +150,141 @@ describe('updateStoredPrivacyData: USP', () => {
       new Error(
         '[tab-cmp] Could not update USP local storage data. window.__uspapi is not defined.'
       )
+    )
+  })
+
+  it('sets the USP local storage value when in the US', () => {
+    expect.assertions(1)
+    const mockPingResponse = {
+      ...getMockUSPPingResponse(),
+      location: 'US', // in US
+    }
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(localStorageMgr.setItem).toHaveBeenCalledWith(
+      'tabCMP.usp.data',
+      JSON.stringify(mockUSPData)
+    )
+  })
+
+  it('sets the USP local storage value when not in the US', () => {
+    expect.assertions(1)
+    const mockPingResponse = {
+      ...getMockUSPPingResponse(),
+      location: 'non-US', // not in the US
+    }
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(localStorageMgr.setItem).toHaveBeenCalledWith(
+      'tabCMP.usp.data',
+      JSON.stringify(mockUSPData)
+    )
+  })
+
+  it('calls logDebugging after updating local storage USP data', () => {
+    expect.assertions(1)
+    const mockPingResponse = getMockUSPPingResponse()
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      'Successfully updated USP local storage data. Value:',
+      mockUSPData
+    )
+  })
+
+  it('calls logDebugging when failing to update local storage USP data due to ping failure', () => {
+    expect.assertions(1)
+    const mockPingResponse = getMockUSPPingResponse()
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, false) // false === unsuccessful
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      'Could not update USP local storage data. The CMP errored.'
+    )
+  })
+
+  it('calls logDebugging when failing to update local storage USP data due to getUSPData failure', () => {
+    expect.assertions(1)
+    const mockPingResponse = getMockUSPPingResponse()
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, false) // false === unsuccessful
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    updateStoredPrivacyData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      'Could not update USP local storage data. The CMP errored and provided these data:',
+      mockUSPData
     )
   })
 })
