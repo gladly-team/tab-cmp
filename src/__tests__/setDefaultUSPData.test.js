@@ -1,4 +1,4 @@
-import { logError } from 'src/logger'
+import { logDebugging, logError } from 'src/logger'
 
 jest.mock('src/logger')
 
@@ -51,6 +51,30 @@ describe('setDefaultUSPData', () => {
     expect(calledToSetDefault).toBe(true)
   })
 
+  it('calls logDebugging when there is no error and the user is in the US jurisdiction', () => {
+    expect.assertions(1)
+    const mockPingResponse = getMockPingResponse()
+    const mockPingStatus = true
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, mockPingStatus)
+          break
+        }
+        case 'setUspDftData': {
+          callback(mockPingResponse, mockPingStatus)
+          break
+        }
+        default:
+      }
+    })
+    const setDefaultUSPData = require('src/setDefaultUSPData').default
+    setDefaultUSPData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      'Successfully set default USP data.'
+    )
+  })
+
   it('does not call setUspDftData the user is not in the US', () => {
     expect.assertions(1)
     const mockPingResponse = {
@@ -76,6 +100,33 @@ describe('setDefaultUSPData', () => {
     const setDefaultUSPData = require('src/setDefaultUSPData').default
     setDefaultUSPData()
     expect(calledToSetDefault).toBe(false)
+  })
+
+  it('calls logDebugging when the user is not in the US', () => {
+    expect.assertions(1)
+    const mockPingResponse = {
+      ...getMockPingResponse(),
+      location: 'FR',
+    }
+    const mockPingStatus = true
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, mockPingStatus)
+          break
+        }
+        case 'setUspDftData': {
+          callback(mockPingResponse, mockPingStatus)
+          break
+        }
+        default:
+      }
+    })
+    const setDefaultUSPData = require('src/setDefaultUSPData').default
+    setDefaultUSPData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      'Not setting default USP data. User is not in the US.'
+    )
   })
 
   it('calls logError if there is a problem setting default USP data', () => {
