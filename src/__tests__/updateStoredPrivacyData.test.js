@@ -188,7 +188,7 @@ describe('updateStoredPrivacyData: USP', () => {
       ...getMockUSPPingResponse(),
       location: 'non-US', // not in the US
     }
-    const mockUSPData = getMockUSPDataInUS()
+    const mockUSPData = getMockUSPDataNonUS()
     window.__uspapi.mockImplementation((cmd, version, callback) => {
       switch (cmd) {
         case 'uspPing': {
