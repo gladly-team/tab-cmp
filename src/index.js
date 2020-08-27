@@ -110,6 +110,10 @@ export const initializeCMP = requireClientSide(async (userOptions = {}) => {
     // Set (as needed) the tab-cmp window variable. Then, set whether
     // GDPR and CCPA apply, if not set already. We use these values
     // in the modified version of the Quantcast Choice CMP JS.
+    // window.tabCMP structure:
+    //   {Boolean} doesGDPRApply
+    //   {Boolean} doesCCPAApply
+    //   {Function} uspStubFunction (set in head script)
     window.tabCMP = window.tabCMP || {}
     window.tabCMP.doesGDPRApply = Object.prototype.hasOwnProperty.call(
       window.tabCMP,

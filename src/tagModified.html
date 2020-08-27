@@ -7,7 +7,9 @@
 try {
   (function() {
     // Gladly modified: create window object.
-    window.tabCMP = window.tabCMP || {}
+    window.tabCMP = window.tabCMP || {
+      uspStubFunction: undefined
+    }
 
     // Gladly modified: don't load the QC Choice script.
     // We'll import it ourselves.
@@ -233,6 +235,10 @@ try {
         }, 500);
       }
     };
+
+    // Gladly modified: store the stub function so we know when
+    // Quantcast Choice has finished initializing.
+    window.tabCMP.uspStubFunction = uspStubFunction
 
     var checkIfUspIsReady = function() {
       uspTries++;

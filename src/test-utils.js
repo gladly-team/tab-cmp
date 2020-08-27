@@ -1,3 +1,9 @@
+export const getMockTabCMPGlobal = () => ({
+  doesGDPRApply: false,
+  doesCCPAApply: true,
+  uspStubFunction: () => {},
+})
+
 export const getMockUSPPingResponse = () => ({
   cmpLoaded: true,
   jurisdiction: ['US'],
