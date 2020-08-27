@@ -15,7 +15,8 @@ export const flushAllPromises = async () => {
  * @return {Promise<undefined>}
  */
 export const runAsyncTimerLoops = async (numLoops = 2) => {
-  for (let i = 0; i < numLoops; i++) {
+  for (let i = 0; i < numLoops; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
     await flushAllPromises()
     jest.runAllTimers()
   }
