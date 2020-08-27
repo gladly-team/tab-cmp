@@ -1,17 +1,22 @@
 import { logDebugging, logError } from 'src/logger'
 import localStorageMgr from 'src/localStorageMgr'
 import {
+  getMockTabCMPGlobal,
   getMockUSPDataInUS,
   getMockUSPDataNonUS,
   getMockUSPPingResponse,
   getMockTCFDataInEU,
   getMockTCFDataNonEU,
 } from 'src/test-utils'
+import awaitCMPLoad from 'src/awaitCMPLoad'
 
 jest.mock('src/logger')
 jest.mock('src/localStorageMgr')
+jest.mock('src/awaitCMPLoad')
 
 beforeEach(() => {
+  awaitCMPLoad.mockResolvedValue()
+  window.tabCMP = getMockTabCMPGlobal()
   window.__tcfapi = jest.fn()
   window.__uspapi = jest.fn()
 })
@@ -21,22 +26,22 @@ afterEach(() => {
 })
 
 describe('updateStoredPrivacyData: TCF', () => {
-  it('does not throw if window.__tcfapi is undefined', () => {
+  it('does not throw if window.__tcfapi is undefined', async () => {
     expect.assertions(1)
     delete window.__tcfapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    expect(() => {
-      updateStoredPrivacyData()
+    await expect(async () => {
+      await updateStoredPrivacyData()
     }).not.toThrow()
   })
 
-  it('logs an error if window.__tcfapi is undefined', () => {
+  it('logs an error if window.__tcfapi is undefined', async () => {
     expect.assertions(1)
     delete window.__tcfapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logError).toHaveBeenCalledWith(
       new Error(
         '[tab-cmp] Could not update TCF local storage data. window.__tcfapi is not defined.'
@@ -44,7 +49,7 @@ describe('updateStoredPrivacyData: TCF', () => {
     )
   })
 
-  it('sets the TCF local storage value when in the EU', () => {
+  it('sets the TCF local storage value when in the EU', async () => {
     expect.assertions(1)
     const mockTCFData = getMockTCFDataInEU() // EU
     window.__tcfapi.mockImplementation((cmd, version, callback) => {
@@ -58,14 +63,14 @@ describe('updateStoredPrivacyData: TCF', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.tcfv2.data',
       JSON.stringify(mockTCFData)
     )
   })
 
-  it('sets the TCF local storage value when not in the EU', () => {
+  it('sets the TCF local storage value when not in the EU', async () => {
     expect.assertions(1)
     const mockTCFData = getMockTCFDataNonEU() // non-EU
     window.__tcfapi.mockImplementation((cmd, version, callback) => {
@@ -79,14 +84,14 @@ describe('updateStoredPrivacyData: TCF', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.tcfv2.data',
       JSON.stringify(mockTCFData)
     )
   })
 
-  it('calls logDebugging after updating local storage TCF data', () => {
+  it('calls logDebugging after updating local storage TCF data', async () => {
     expect.assertions(1)
     const mockTCFData = getMockTCFDataInEU()
     window.__tcfapi.mockImplementation((cmd, version, callback) => {
@@ -100,14 +105,14 @@ describe('updateStoredPrivacyData: TCF', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       `Successfully updated TCF local storage data. Value:`,
       mockTCFData
     )
   })
 
-  it('calls logDebugging when failing to update local storage TCF data', () => {
+  it('calls logDebugging when failing to update local storage TCF data', async () => {
     expect.assertions(1)
     const mockTCFData = getMockTCFDataInEU()
     window.__tcfapi.mockImplementation((cmd, version, callback) => {
@@ -121,7 +126,7 @@ describe('updateStoredPrivacyData: TCF', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update TCF local storage data. The CMP errored and provided these data:',
       mockTCFData
@@ -130,22 +135,22 @@ describe('updateStoredPrivacyData: TCF', () => {
 })
 
 describe('updateStoredPrivacyData: USP', () => {
-  it('does not throw if window.__uspapi is undefined', () => {
+  it('does not throw if window.__uspapi is undefined', async () => {
     expect.assertions(1)
     delete window.__uspapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    expect(() => {
-      updateStoredPrivacyData()
+    await expect(async () => {
+      await updateStoredPrivacyData()
     }).not.toThrow()
   })
 
-  it('logs an error if window.__uspapi is undefined', () => {
+  it('logs an error if window.__uspapi is undefined', async () => {
     expect.assertions(1)
     delete window.__uspapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logError).toHaveBeenCalledWith(
       new Error(
         '[tab-cmp] Could not update USP local storage data. window.__uspapi is not defined.'
@@ -153,7 +158,7 @@ describe('updateStoredPrivacyData: USP', () => {
     )
   })
 
-  it('sets the USP local storage value when in the US', () => {
+  it('sets the USP local storage value when in the US', async () => {
     expect.assertions(1)
     const mockPingResponse = {
       ...getMockUSPPingResponse(),
@@ -175,14 +180,14 @@ describe('updateStoredPrivacyData: USP', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.usp.data',
       JSON.stringify(mockUSPData)
     )
   })
 
-  it('sets the USP local storage value when not in the US', () => {
+  it('sets the USP local storage value when not in the US', async () => {
     expect.assertions(1)
     const mockPingResponse = {
       ...getMockUSPPingResponse(),
@@ -204,14 +209,14 @@ describe('updateStoredPrivacyData: USP', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.usp.data',
       JSON.stringify(mockUSPData)
     )
   })
 
-  it('calls logDebugging after updating local storage USP data', () => {
+  it('calls logDebugging after updating local storage USP data', async () => {
     expect.assertions(1)
     const mockPingResponse = getMockUSPPingResponse()
     const mockUSPData = getMockUSPDataInUS()
@@ -230,14 +235,14 @@ describe('updateStoredPrivacyData: USP', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Successfully updated USP local storage data. Value:',
       mockUSPData
     )
   })
 
-  it('calls logDebugging when failing to update local storage USP data due to ping failure', () => {
+  it('calls logDebugging when failing to update local storage USP data due to ping failure', async () => {
     expect.assertions(1)
     const mockPingResponse = getMockUSPPingResponse()
     const mockUSPData = getMockUSPDataInUS()
@@ -256,13 +261,13 @@ describe('updateStoredPrivacyData: USP', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update USP local storage data. The CMP errored.'
     )
   })
 
-  it('calls logDebugging when failing to update local storage USP data due to getUSPData failure', () => {
+  it('calls logDebugging when failing to update local storage USP data due to getUSPData failure', async () => {
     expect.assertions(1)
     const mockPingResponse = getMockUSPPingResponse()
     const mockUSPData = getMockUSPDataInUS()
@@ -281,7 +286,7 @@ describe('updateStoredPrivacyData: USP', () => {
     })
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    updateStoredPrivacyData()
+    await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update USP local storage data. The CMP errored and provided these data:',
       mockUSPData

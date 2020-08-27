@@ -1,36 +1,9 @@
 import localStorageMgr from 'src/localStorageMgr'
 import { logDebugging, logError } from 'src/logger'
+import awaitCMPLoad from 'src/awaitCMPLoad'
 
 const TCF_LOCAL_DATA_KEY = 'tabCMP.tcfv2.data'
 const USP_LOCAL_DATA_KEY = 'tabCMP.usp.data'
-
-// A proxy for when the Quantcast Choice CMP has fully
-// loaded. Resolves if successful and rejects if
-// it times out.
-const waitForCMPToReplaceAPIStubs = async () => {
-  return new Promise((resolve, reject) => {
-    logDebugging(`Polling for CMP to have loaded in updateStoredPrivacyData.`)
-    const intervalMs = 500
-    let timesChecked = 0
-    const maxTimesToCheck = 20
-    const checkIfCMPLoaded = () =>
-      window.tabCMP.uspStubFunction !== window.__uspapi
-    const checker = setInterval(() => {
-      const isLoaded = checkIfCMPLoaded()
-      logDebugging(`Polling for CMP loaded. Loaded? ${isLoaded}`)
-      if (isLoaded) {
-        clearInterval(checker)
-        resolve()
-      }
-      timesChecked += 1
-      if (timesChecked > maxTimesToCheck) {
-        clearInterval(checker)
-        logDebugging(`Polling for CMP has timed out.`)
-        reject()
-      }
-    }, intervalMs)
-  })
-}
 
 // Get the TCF and USP data from Quantcast Choice and
 // store them in local storage. This gives our stub
@@ -41,7 +14,7 @@ const updateStoredPrivacyData = async () => {
   // Otherwise, we'd be receiving our own local storage data
   // when trying to update local storage data.
   try {
-    await waitForCMPToReplaceAPIStubs()
+    await awaitCMPLoad()
   } catch (e) {
     logDebugging(`Could not update stored privacy data.`)
     return
