@@ -1,7 +1,5 @@
 import { logDebugging } from 'src/logger'
 
-// TODO: add tests
-
 // Poll for changes to the USP stub function as a
 // proxy for when the Quantcast Choice CMP has fully
 // loaded. Resolves if successful and rejects if
@@ -25,7 +23,7 @@ const awaitCMPLoad = async () => {
       if (timesChecked > maxTimesToCheck) {
         clearInterval(checker)
         logDebugging(`Polling for CMP has timed out.`)
-        reject()
+        reject(new Error('Timed out while waiting for the CMP.'))
       }
     }, intervalMs)
   })
