@@ -25,6 +25,8 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
+// TODO: test behavior when CMP load times out
+
 describe('updateStoredPrivacyData: TCF', () => {
   it('does not throw if window.__tcfapi is undefined', async () => {
     expect.assertions(1)
