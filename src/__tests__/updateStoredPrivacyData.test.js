@@ -25,7 +25,36 @@ afterEach(() => {
   jest.clearAllMocks()
 })
 
-// TODO: test behavior when CMP load times out
+describe('updateStoredPrivacyData: CMP failure', () => {
+  it('does not throw if awaitCMPLoad rejects', async () => {
+    expect.assertions(1)
+    awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    await expect(updateStoredPrivacyData()).resolves.not.toThrow()
+  })
+
+  it('does not call __tcfapi or __uspapi if awaitCMPLoad rejects', async () => {
+    expect.assertions(2)
+    awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    await updateStoredPrivacyData()
+    expect(window.__tcfapi).not.toHaveBeenCalled()
+    expect(window.__uspapi).not.toHaveBeenCalled()
+  })
+
+  it('calls logDebugging if awaitCMPLoad rejects', async () => {
+    expect.assertions(1)
+    awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    await updateStoredPrivacyData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      `Could not update stored privacy data.`
+    )
+  })
+})
 
 describe('updateStoredPrivacyData: TCF', () => {
   it('does not throw if window.__tcfapi is undefined', async () => {
@@ -33,9 +62,7 @@ describe('updateStoredPrivacyData: TCF', () => {
     delete window.__tcfapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    await expect(async () => {
-      await updateStoredPrivacyData()
-    }).not.toThrow()
+    await expect(updateStoredPrivacyData()).resolves.not.toThrow()
   })
 
   it('logs an error if window.__tcfapi is undefined', async () => {
@@ -142,9 +169,7 @@ describe('updateStoredPrivacyData: USP', () => {
     delete window.__uspapi
     const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
       .default
-    await expect(async () => {
-      await updateStoredPrivacyData()
-    }).not.toThrow()
+    await expect(updateStoredPrivacyData()).resolves.not.toThrow()
   })
 
   it('logs an error if window.__uspapi is undefined', async () => {
