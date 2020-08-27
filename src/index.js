@@ -67,10 +67,6 @@ const isDebugParamSet = () => {
 export const initializeCMP = requireClientSide(async (userOptions = {}) => {
   // Ensure initializeCMP is called only once.
   if (tabCMPInitialized) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[tab-cmp] initializeCMP was called more than once. Ignoring this initialization.`
-    )
     return
   }
   tabCMPInitialized = true

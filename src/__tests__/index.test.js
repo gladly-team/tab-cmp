@@ -104,19 +104,6 @@ describe('index.js: initializeCMP', () => {
     }).toThrow('[tab-cmp] tab-cmp cannot be called server-side.')
   })
 
-  it('warns if calling initializeCMP more than once', () => {
-    expect.assertions(2)
-    const index = require('src/index')
-    const mockConsoleWarn = jest.fn()
-    jest.spyOn(console, 'warn').mockImplementation(mockConsoleWarn)
-    index.initializeCMP()
-    expect(mockConsoleWarn).not.toHaveBeenCalled()
-    index.initializeCMP()
-    expect(mockConsoleWarn).toHaveBeenCalledWith(
-      '[tab-cmp] initializeCMP was called more than once. Ignoring this initialization.'
-    )
-  })
-
   it('calls console.error if setUpLogger fails but does not throw', async () => {
     expect.assertions(2)
     const index = require('src/index')
@@ -189,6 +176,16 @@ describe('index.js: initializeCMP', () => {
     await index.initializeCMP()
     const initCMP = require('src/initCMP').default
     expect(initCMP).toHaveBeenCalled()
+  })
+
+  it('calls initCMP only once, even if tabCMP.initializeCMP is called multiple times', async () => {
+    expect.assertions(1)
+    const index = require('src/index')
+    await index.initializeCMP()
+    await index.initializeCMP()
+    await index.initializeCMP()
+    const initCMP = require('src/initCMP').default
+    expect(initCMP).toHaveBeenCalledTimes(1)
   })
 
   it('calls setDefaultUSPData', async () => {
