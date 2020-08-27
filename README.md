@@ -36,7 +36,7 @@ This section has info on how to set up these test contexts.
 To reset CMP state:
 * delete `tabCMP*` local storage values
 * delete the following coookies: `euconsent-v2`, `usprivacy`, `addtl_consent`
-* if using unmodified Quantcast Choice, which we are not currently doing, clear the browser cache after changing VPNs to ensure the geolocation is updated
+* Clear cache storage after changing VPN location to ensure the geolocation is updated for third party scripts (e.g. Google Ad Manager or Amazon)
 
 ### How to Set Geolocation
 
