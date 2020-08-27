@@ -4,6 +4,7 @@ import awaitCMPLoad from 'src/awaitCMPLoad'
 
 const TCF_LOCAL_DATA_KEY = 'tabCMP.tcfv2.data'
 const USP_LOCAL_DATA_KEY = 'tabCMP.usp.data'
+const USP_PING_LOCAL_DATA_KEY = 'tabCMP.uspPing.data'
 
 // Get the TCF and USP data from Quantcast Choice and
 // store them in local storage. This gives our stub
@@ -49,9 +50,16 @@ const updateStoredPrivacyData = async () => {
 
     // USP/CCPA
     if (typeof window.__uspapi === 'function') {
-      window.__uspapi('uspPing', 1, (_, status) => {
+      window.__uspapi('uspPing', 1, (uspPingResponse, status) => {
         if (status) {
-          // TODO: store uspPing response.
+          localStorageMgr.setItem(
+            USP_PING_LOCAL_DATA_KEY,
+            JSON.stringify(uspPingResponse)
+          )
+          logDebugging(
+            `Successfully updated USP ping local storage data. Value:`,
+            uspPingResponse
+          )
 
           window.__uspapi('getUSPData', 1, (uspData, success) => {
             if (success && uspData) {

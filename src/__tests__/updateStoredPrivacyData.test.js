@@ -185,6 +185,64 @@ describe('updateStoredPrivacyData: USP', () => {
     )
   })
 
+  it('sets the USP ping local storage value', async () => {
+    expect.assertions(1)
+    const mockPingResponse = {
+      ...getMockUSPPingResponse(),
+      location: 'US', // in US
+    }
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    await updateStoredPrivacyData()
+    expect(localStorageMgr.setItem).toHaveBeenCalledWith(
+      'tabCMP.uspPing.data',
+      JSON.stringify(mockPingResponse)
+    )
+  })
+
+  it('calls logDebugging after setting the USP ping local storage value', async () => {
+    expect.assertions(1)
+    const mockPingResponse = {
+      ...getMockUSPPingResponse(),
+      location: 'US', // in US
+    }
+    const mockUSPData = getMockUSPDataInUS()
+    window.__uspapi.mockImplementation((cmd, version, callback) => {
+      switch (cmd) {
+        case 'uspPing': {
+          callback(mockPingResponse, true)
+          break
+        }
+        case 'getUSPData': {
+          callback(mockUSPData, true)
+          break
+        }
+        default:
+      }
+    })
+    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
+      .default
+    await updateStoredPrivacyData()
+    expect(logDebugging).toHaveBeenCalledWith(
+      `Successfully updated USP ping local storage data. Value:`,
+      mockPingResponse
+    )
+  })
+
   it('sets the USP local storage value when in the US', async () => {
     expect.assertions(1)
     const mockPingResponse = {
