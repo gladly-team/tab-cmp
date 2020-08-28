@@ -1,3 +1,33 @@
+/**
+ * Flush the Promise resolution queue. See:
+ * https://github.com/facebook/jest/issues/2157
+ * @return {Promise<undefined>}
+ */
+export const flushAllPromises = async () => {
+  await new Promise((resolve) => setImmediate(resolve))
+}
+
+/**
+ * Flush the Promise resolution queue, then all timers, and
+ * repeat the given number of times. This is useful for
+ * recursive async code that sets new timers.
+ * https://github.com/facebook/jest/issues/2157
+ * @return {Promise<undefined>}
+ */
+export const runAsyncTimerLoops = async (numLoops = 2) => {
+  for (let i = 0; i < numLoops; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await flushAllPromises()
+    jest.runAllTimers()
+  }
+}
+
+export const getMockTabCMPGlobal = () => ({
+  doesGDPRApply: false,
+  doesCCPAApply: true,
+  uspStubFunction: () => {},
+})
+
 export const getMockUSPPingResponse = () => ({
   cmpLoaded: true,
   jurisdiction: ['US'],

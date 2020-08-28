@@ -1,21 +1,31 @@
 import localStorageMgr from 'src/localStorageMgr'
 import { logDebugging, logError } from 'src/logger'
+import awaitCMPLoad from 'src/awaitCMPLoad'
 
 const TCF_LOCAL_DATA_KEY = 'tabCMP.tcfv2.data'
 const USP_LOCAL_DATA_KEY = 'tabCMP.usp.data'
+const USP_PING_LOCAL_DATA_KEY = 'tabCMP.uspPing.data'
 
 // Get the TCF and USP data from Quantcast Choice and
 // store them in local storage. This gives our stub
 // functions quicker access to the user's choices.
-const updateStoredPrivacyData = () => {
+const updateStoredPrivacyData = async () => {
+  // It's critical Quantcast Choice is loaded, replacing our
+  // modified stub functions, before we sync.
+  // Otherwise, we'd be receiving our own local storage data
+  // when trying to update local storage data.
+  try {
+    await awaitCMPLoad()
+  } catch (e) {
+    logDebugging(`Could not update stored privacy data.`)
+    return
+  }
+
   try {
     logDebugging(`Syncing local storage TCF and USP data.`)
 
     // TCF/GDPR
     if (typeof window.__tcfapi === 'function') {
-      // It's critical Quantcast Choice is loaded before we sync.
-      // Otherwise, we'd be receiving our own local storage data
-      // when trying to update local storage data.
       window.__tcfapi('getTCData', 2, (tcData, success) => {
         if (success && tcData) {
           localStorageMgr.setItem(TCF_LOCAL_DATA_KEY, JSON.stringify(tcData))
@@ -40,12 +50,17 @@ const updateStoredPrivacyData = () => {
 
     // USP/CCPA
     if (typeof window.__uspapi === 'function') {
-      // The ping ensures Quantcast Choice is loaded before we sync
-      // USP data. It's important our modified USP stub does not
-      // handle uspPing; otherwise, we'd be receiving our own local
-      // storage data when trying to update local storage data.
-      window.__uspapi('uspPing', 1, (_, status) => {
+      window.__uspapi('uspPing', 1, (uspPingResponse, status) => {
         if (status) {
+          localStorageMgr.setItem(
+            USP_PING_LOCAL_DATA_KEY,
+            JSON.stringify(uspPingResponse)
+          )
+          logDebugging(
+            `Successfully updated USP ping local storage data. Value:`,
+            uspPingResponse
+          )
+
           window.__uspapi('getUSPData', 1, (uspData, success) => {
             if (success && uspData) {
               localStorageMgr.setItem(
