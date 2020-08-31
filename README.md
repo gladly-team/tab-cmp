@@ -6,6 +6,13 @@
 
 A Consent Management Platform (CMP) for [Tab for a Cause](https://github.com/gladly-team/tab). Creates IAB-compliant `window.__tcfapi` and `window.__uspapi` functions and saves users' data privacy options.
 
+* [Get Started](#get-started)
+* [Why This Package Exists](#why-this-package-exists)
+* [API](#api)
+* [Developing & Updating](#developing--updating)
+* [Notes on Testing](#preparing-to-test-the-integration)
+* [Test Checklist](#test-checklist)
+
 ## Get Started
 
 1. Add the [`tagModified.html`](./src/tagModified.html) code to the `<head />` of the page.
