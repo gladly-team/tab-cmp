@@ -73,7 +73,9 @@ Upgrading or modifying Quantcast Choice settings requires a combination of modif
 7. Update `tab.gladly.io` settings in the QC Choice management panel to match the `tab.gladly.dev` settings
 
 ### Debugging
-TODO
+* Add a `tabCMPDebug=true` URL parameter to the page to enable debug logging
+* For `tab-ads`, which is useful to test ad partner behavior: add a `tabAdsDebug=true` URL parameter to the page to enable debug logging
+* For Google Ad Manager: enable the [Google Publisher Console](https://support.google.com/admanager/answer/2462712?hl=en)
 
 ## Preparing to Test the Integration
 
