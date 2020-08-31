@@ -107,7 +107,7 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
-* The request to Google Ad Manager includes the expected privacy options. For the request to `securepubads.g.doubleclick.net/gampad/`: the `us_privacy` query string value is `1YNN`, the `gdpr` value is `0`, and `addtl_consent` value is a string of numbers.
+* The request to Google Ad Manager includes the expected privacy options. For the request to `securepubads.g.doubleclick.net/gampad/`: the `us_privacy` query string value is `1YNN` and the `gdpr` value is `0`.
 
   Works on:
   - [ ] top frame
