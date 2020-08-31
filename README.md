@@ -36,7 +36,25 @@ If a third-party CMP can support these needs, we can consider deprecating this m
 
 ## API
 
-TODO: methods
+#### async initializeCMP(config)
+
+Required before calling other methods. Determines the user's country location, runs the QC Choice JS, and sets default USP data as needed.
+
+#### async doesGDPRApply()
+
+Resolves to true if the user is in the EU. Use this to know whether to render GDPR-related privacy options.
+
+#### async doesCCPAApply()
+
+Resolves to true if the user is in the US.  Use this to know whether to render CCPA-related privacy options.
+
+#### async openTCFConsentDialog()
+
+Opens the GDPR consent dialog.
+
+#### async openCCPAConsentDialog()
+
+Opens the CCPA data privacy dialog.
 
 ## Developing & Updating
 
