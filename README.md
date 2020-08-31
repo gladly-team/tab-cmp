@@ -131,6 +131,12 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] top frame
   - [ ] iframed new tab
 
+* The request to fetch ads is not substantially slower than prior to making CMP changes. Compare the request time of `securepubads.g.doubleclick.net/gampad/` to a prior deployment.
+
+  Confirmed on:
+  - [ ] top frame
+  - [ ] iframed new tab
+
 
 ### EU/GDPR
 **Basic CMP functionality**
@@ -202,5 +208,11 @@ Start  by clearing the CMP data, then consenting to data usage.
 * Index Exchange uses expected privacy options. For the request to `htlb.casalemedia.com/cygnus`: the `r` query string value includes the `regs` property equal to `{"ext":{"gdpr":1,"us_privacy":"1---"}}` and an `ext` property with a `consent` value equal to the consent string.
 
   Works on:
+  - [ ] top frame
+  - [ ] iframed new tab
+
+* The request to fetch ads is not substantially slower than prior to making CMP changes. Compare the request time of `securepubads.g.doubleclick.net/gampad/` to a prior deployment.
+
+  Confirmed on:
   - [ ] top frame
   - [ ] iframed new tab
