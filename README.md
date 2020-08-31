@@ -40,7 +40,22 @@ TODO: methods
 
 ## Developing & Updating
 
-TODO: info on what we changed in the CMP and how to update it
+### What We Changed
+
+This module wraps the Quantcast Choice CMP. We modify its behavior in a few ways:
+* We change the privacy data cookies to `SameSite=None` (from `SameSite=Lax`) so the CMP works in a cross-domain iframe. We package a static version of QC Choice's CMP JS file with the necessary changes.
+* We handle geolocation ourselves. This is necessary because QC Choice's CMP JS file is normally dynamic based on location, and we use static JS.
+* We add functional stubs for the TCF and USP APIs that relies on data we sync to local storage. This allows our CMP to respond rapidly before QC Choice JS has initialized.
+* We add debugging and error logging.
+
+### Documentation
+TODO
+
+### How to Update to a New Version
+TODO
+
+### Debugging
+TODO
 
 ## Preparing to Test the Integration
 
