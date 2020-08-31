@@ -58,8 +58,19 @@ This module wraps the Quantcast Choice CMP. We modify its behavior in a few ways
   * Amazon [privacy docs](https://ams.amazon.com/webpublisher/uam/docs/web-integration-documentation/integration-guide/uam-ccpa.html)
   * Index Exchange [privacy docs](https://kb.indexexchange.com/publishers/managing_your_ix_library/enable_privacy_regulation_support.htm)
 
-### How to Update to a New Version
-TODO
+### How to Modify Settings or Update to a New Version
+
+Upgrading or modifying Quantcast Choice settings requires a combination of modifying the settings in the QC Choice management panel and modifying local code. Note that some of our CMP settings uses the QC Choice panel settings directly, but many settings are hardcoded locally.
+
+1. Update the `tab.gladly.dev` settings in the QC Choice management panel
+2. Update the version in the URL of the NPM script `quantcast:cmp-js:download` to match the portal version
+3. Run `yarn run quantcast:update`
+4. Manually reconcile changes in `./quantcast/qcChoiceOriginal.js` to update `./src/qcChoiceModified.js` and `./src/initCMP.js`
+5. If `./quantcast/qcCmpOriginal.js` has changed:
+    * Ensure it still uses the cookie and geolocation logic that we expect to modify (see the `quantcast:cmp-js:copy-with-edits` NPM script)
+    * Run `yarn run quantcast:cmp-js:copy-with-edits`
+6. Manually test the CMP in a staging environment. See the test checklist below.
+7. Update `tab.gladly.io` settings in the QC Choice management panel to match the `tab.gladly.dev` settings
 
 ### Debugging
 TODO
