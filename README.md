@@ -107,13 +107,30 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
-* The request to Google Ad Manager includes the USP string. The `us_privacy` URL parameter for the request to `securepubads.g.doubleclick.net/gampad/` should be `1YYN`.
+* The request to Google Ad Manager includes the expected privacy options. For the request to `securepubads.g.doubleclick.net/gampad/`: the `us_privacy` query string value is `1YNN`, the `gdpr` value is `0`, and `addtl_consent` value is a string of numbers.
 
   Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
-* TODO: inspect additional ad partner requests
+* The request to Amazon has expected privacy options. For the request to `https://c.amazon-adsystem.com/e/dtb/bid`: the `pj` query string value is `{"us_privacy":"1YNN"}`, the `gdpre` value is `0`, and the `gdprl.status` value is `tcfv2-success`.
+
+  Works on:
+  - [ ] top frame
+  - [ ] iframed new tab
+  
+* A Prebid partner uses expected privacy options. E.g., for the Sonobi request to `apex.go.sonobi.com/trinity.json`: the `us_privacy` query string value is `1YNN` and the `gdpr` value is `false`.
+
+  Works on:
+  - [ ] top frame
+  - [ ] iframed new tab
+  
+* Index Exchange uses expected privacy options. For the request to `htlb.casalemedia.com/cygnus`: the `r` query string value includes the `regs` property equal to `{"ext":{"gdpr":0,"us_privacy":"1YNN"}}`.
+
+  Works on:
+  - [ ] top frame
+  - [ ] iframed new tab
+
 
 ### EU/GDPR
 **Basic CMP functionality**
@@ -164,25 +181,25 @@ Start  by clearing the CMP data, then consenting to data usage.
   - [ ] iframed new tab
 
 **Ad Partner Behavior**
-* The request to Google Ad Manager includes the expected privacy options. For the request to `securepubads.g.doubleclick.net/gampad/`: the `us_privacy` query string value should be `1YNN`, the `gdpr` should be `0`, and `addtl_consent` should be a string of numbers.
+* The request to Google Ad Manager includes the expected privacy options. For the request to `securepubads.g.doubleclick.net/gampad/`: the `us_privacy` query string value is `1---`, the `gdpr` value is `1`, the `gdpr_consent` value is the consent string (matching the `euconsent-v2` cookie value), and `addtl_consent` is a string of numbers.
 
   Works on:
   - [ ] top frame
   - [ ] iframed new tab
 
-* The request to Amazon has expected privacy options. For the request to `https://c.amazon-adsystem.com/e/dtb/bid`: the `pj` query string value is `{"us_privacy":"1YNN"}`, the `gdpre` value is `0`, and the `gdprl.status` value is `tcfv2-success`.
-
-  Works on:
-  - [ ] top frame
-  - [ ] iframed new tab
-  
-* A Prebid partner uses expected privacy options. E.g., for the Sonobi request to `apex.go.sonobi.com/trinity.json`: the `us_privacy` query string value should be `1YNN` and the `gdpr` value should be `false`.
+* The request to Amazon has expected privacy options. For the request to `https://c.amazon-adsystem.com/e/dtb/bid`: the `pj` query string value is `{"us_privacy":"1---"}`, the `gdpre` value is `1`, the `gdprc` value is the consent string, and the `gdprl.status` value is `tcfv2-success`.
 
   Works on:
   - [ ] top frame
   - [ ] iframed new tab
   
-* Index Exchange uses expected privacy options. For the request to `htlb.casalemedia.com/cygnus`: the `r` query string value includes the `regs` property equal to `{"ext":{"gdpr":0,"us_privacy":"1YNN"}}`.
+* A Prebid partner uses expected privacy options. E.g., for the Sonobi request to `apex.go.sonobi.com/trinity.json`: the `us_privacy` query string value is `1---`, the `gdpr` value is `true`, and the `consent_string` value is the consent string.
+
+  Works on:
+  - [ ] top frame
+  - [ ] iframed new tab
+  
+* Index Exchange uses expected privacy options. For the request to `htlb.casalemedia.com/cygnus`: the `r` query string value includes the `regs` property equal to `{"ext":{"gdpr":1,"us_privacy":"1---"}}` and an `ext` property with a `consent` value equal to the consent string.
 
   Works on:
   - [ ] top frame
