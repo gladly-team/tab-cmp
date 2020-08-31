@@ -29,7 +29,7 @@ tabCMP.initializeCMP({
 ## Why This Package Exists
 
 There are two reasons we aren't simply relying on another vanilla, third-party CMP:
-* **Iframe support:** Our app often loads within a cross-domain iframe in the new tab page extension. We need the CMP to work normally in the iframe as it would on a top frame.
+* **iframe support:** Our app often loads within a cross-domain iframe in the new tab page extension. We need the CMP to work normally in the iframe as it would on a top frame.
 * **Speed:** Third-party CMPs can take 100s of milliseconds to load and respond, which delays ad requests. The nature of our app requires the CMP to be faster.
 
 If a third-party CMP can support these needs, we can consider deprecating this module.
