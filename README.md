@@ -48,8 +48,15 @@ This module wraps the Quantcast Choice CMP. We modify its behavior in a few ways
 * We add functional stubs for the TCF and USP APIs that relies on data we sync to local storage. This allows our CMP to respond rapidly before QC Choice JS has initialized.
 * We add debugging and error logging.
 
-### Documentation
-TODO
+### External Links/Documentation
+* Quantcast Choice
+  * [QC Choice sites management portal](https://www.quantcast.com/protect/sites)
+  * [QC Choice release notes](https://help.quantcast.com/hc/en-us/articles/360047357574-Quantcast-Choice-Code-Release-Notes-TCF-v2-0-)
+  * [QC Choice API docs](https://help.quantcast.com/hc/en-us/articles/360047078534-Choice-CMP2-CCPA-API-Index-TCF-v2-0-)
+* Ad partners
+  * Prebid [GDPR](https://docs.prebid.org/dev-docs/modules/consentManagement.html) and [US privacy](https://docs.prebid.org/dev-docs/modules/consentManagementUsp.html) docs
+  * Amazon [privacy docs](https://ams.amazon.com/webpublisher/uam/docs/web-integration-documentation/integration-guide/uam-ccpa.html)
+  * Index Exchange [privacy docs](https://kb.indexexchange.com/publishers/managing_your_ix_library/enable_privacy_regulation_support.htm)
 
 ### How to Update to a New Version
 TODO
