@@ -4,7 +4,7 @@
 
 # tab-cmp
 
-A wrapper for the Consent Management Platform used on [Tab for a Cause](https://github.com/gladly-team/tab)
+A Consent Management Platform (CMP) for [Tab for a Cause](https://github.com/gladly-team/tab). Creates IAB-compliant `window.__tcfapi` and `window.__uspapi` functions and saves users' data privacy options.
 
 ## Get Started
 
