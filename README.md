@@ -135,7 +135,8 @@ Our app often loads in the new tab page iframe, in the context of a browser exte
 
   Confirmed on:
   - [ ] top frame
-  - [ ] iframed new tab
+  
+  *It's challenging to accurately test timing in the iframe, so no need to.*
 
 
 ### EU/GDPR
@@ -215,4 +216,5 @@ Start  by clearing the CMP data, then consenting to data usage.
 
   Confirmed on:
   - [ ] top frame
-  - [ ] iframed new tab
+  
+  *It's challenging to accurately test timing in the iframe, so no need to.*
