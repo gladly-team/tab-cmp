@@ -8,7 +8,23 @@ A wrapper for the Consent Management Platform used on [Tab for a Cause](https://
 
 ## Get Started
 
-TODO: how to add this to a project.
+1. Add the [`tagModified.html`](./src/tagModified.html) code to the `<head />` of the page.
+2. `yarn add tab-cmp`
+3. On any page that should have a functional CMP (likely the entire app), intialize the CMP:
+```js
+import tabCMP from 'tab-cmp'
+
+tabCMP.initializeCMP({
+  // Set configuration as needed.
+  displayPersistentConsentLink: false,
+  onError: err => {
+    console.error(err)
+  },
+  primaryButtonColor: '#9d4ba3',
+  publisherName: 'Tab for a Cause',
+  publisherLogo: tabLogoWithText,
+})
+```
 
 ## API
 
