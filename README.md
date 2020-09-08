@@ -32,6 +32,9 @@ tabCMP.initializeCMP({
   publisherLogo: tabLogoWithText,
 })
 ```
+4. _Optional:_ Ignore unhelpful unhandled rejections from Quantcast Choice. In your app's error logging logic, ignore:
+   * Errors with name `GVLError`. This is a network failure when fetching the vendor list.
+   * Errors with message `Failed to read the 'localStorage' property from 'Window': Access is denied for this document.`. This is an expected error for the new tab page cross-domain frame in some browsers.
 
 ## Why This Package Exists
 
