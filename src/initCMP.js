@@ -2,6 +2,7 @@
 /* eslint no-underscore-dangle:0 */
 
 import { setUpQuantcastChoice, getLanguage } from 'src/qcChoiceModified'
+import loadQCCmpModified from 'src/loadQCCmpModified'
 
 const initCMP = (options) => {
   const {
@@ -10,6 +11,12 @@ const initCMP = (options) => {
     displayPersistentConsentLink,
     primaryButtonColor,
   } = options
+
+  if (typeof window.__tcfapi !== 'function') {
+    throw new Error(
+      'window.__tcfapi must be defined before initializing the CMP. Confirm the head tag is set.'
+    )
+  }
 
   setUpQuantcastChoice()
 
@@ -65,7 +72,23 @@ const initCMP = (options) => {
 
   // Important: the CMP JS apparently must load after the
   // initial call to __tcfapi above.
-  require('src/qcCmpModified')
+  try {
+    loadQCCmpModified()
+  } catch (e) {
+    const shouldIgnoreErr =
+      // Ignore global vendor list errors, which are just network
+      // failures.
+      e.name === 'GVLError' ||
+      (e.name === 'TypeError' &&
+        e.message === "Cannot read property 'getItem' of null") ||
+      (e.name === 'SecurityError' &&
+        e.message ===
+          "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.")
+
+    if (!shouldIgnoreErr) {
+      throw e
+    }
+  }
 }
 
 export default initCMP
