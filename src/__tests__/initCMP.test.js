@@ -39,6 +39,18 @@ describe('initCMP', () => {
     expect(setUpQuantcastChoice).toHaveBeenCalled()
   })
 
+  it('throws if window.__tcfapi is undefined', () => {
+    expect.assertions(1)
+    window.__tcfapi = undefined
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    expect(() => {
+      initCMP(opts)
+    }).toThrow(
+      'window.__tcfapi must be defined before initializing the CMP. Confirm the head tag is set.'
+    )
+  })
+
   it('inits __tcfapi with the provided publisherName', () => {
     expect.assertions(1)
     const initCMP = require('src/initCMP').default

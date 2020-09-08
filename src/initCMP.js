@@ -12,6 +12,12 @@ const initCMP = (options) => {
     primaryButtonColor,
   } = options
 
+  if (typeof window.__tcfapi !== 'function') {
+    throw new Error(
+      'window.__tcfapi must be defined before initializing the CMP. Confirm the head tag is set.'
+    )
+  }
+
   setUpQuantcastChoice()
 
   const language = getLanguage()
