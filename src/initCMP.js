@@ -75,9 +75,14 @@ const initCMP = (options) => {
   try {
     loadQCCmpModified()
   } catch (e) {
-    // Ignore global vendor list errors, which are just network
-    // failures.
-    if (e.name !== 'GVLError') {
+    const shouldIgnoreErr =
+      // Ignore global vendor list errors, which are just network
+      // failures.
+      e.name === 'GVLError' ||
+      (e.name === 'TypeError' &&
+        e.message === "Cannot read property 'getItem' of null")
+
+    if (!shouldIgnoreErr) {
       throw e
     }
   }

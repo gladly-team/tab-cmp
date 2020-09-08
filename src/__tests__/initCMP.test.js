@@ -122,4 +122,16 @@ describe('initCMP', () => {
       initCMP(opts)
     }).not.toThrow()
   })
+
+  it('does not throw if loadQCCmpModified.js throws with a localStorage-related getItem error', () => {
+    expect.assertions(1)
+    loadQCCmpModified.mockImplementationOnce(() => {
+      throw new TypeError("Cannot read property 'getItem' of null")
+    })
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    expect(() => {
+      initCMP(opts)
+    }).not.toThrow()
+  })
 })
