@@ -134,4 +134,20 @@ describe('initCMP', () => {
       initCMP(opts)
     }).not.toThrow()
   })
+
+  it('does not throw if loadQCCmpModified.js throws with a localStorage-related iframe error', () => {
+    expect.assertions(1)
+    loadQCCmpModified.mockImplementationOnce(() => {
+      const customErr = new Error(
+        "Failed to read the 'localStorage' property from 'Window': Access is denied for this document."
+      )
+      customErr.name = 'SecurityError'
+      throw customErr
+    })
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    expect(() => {
+      initCMP(opts)
+    }).not.toThrow()
+  })
 })

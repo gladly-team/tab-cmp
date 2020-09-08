@@ -80,7 +80,10 @@ const initCMP = (options) => {
       // failures.
       e.name === 'GVLError' ||
       (e.name === 'TypeError' &&
-        e.message === "Cannot read property 'getItem' of null")
+        e.message === "Cannot read property 'getItem' of null") ||
+      (e.name === 'SecurityError' &&
+        e.message ===
+          "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.")
 
     if (!shouldIgnoreErr) {
       throw e
