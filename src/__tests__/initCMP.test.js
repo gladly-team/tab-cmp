@@ -96,4 +96,18 @@ describe('initCMP', () => {
       initCMP(opts)
     }).toThrow('Problem.')
   })
+
+  it('does not throw if loadQCCmpModified.js throws with a GVLError (global vendor list failure due to network conditions)', () => {
+    expect.assertions(1)
+    loadQCCmpModified.mockImplementationOnce(() => {
+      const customErr = new Error('Some GVL error.')
+      customErr.name = 'GVLError'
+      throw customErr
+    })
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    expect(() => {
+      initCMP(opts)
+    }).not.toThrow()
+  })
 })

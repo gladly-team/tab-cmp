@@ -66,7 +66,15 @@ const initCMP = (options) => {
 
   // Important: the CMP JS apparently must load after the
   // initial call to __tcfapi above.
-  loadQCCmpModified()
+  try {
+    loadQCCmpModified()
+  } catch (e) {
+    // Ignore global vendor list errors, which are just network
+    // failures.
+    if (e.name !== 'GVLError') {
+      throw e
+    }
+  }
 }
 
 export default initCMP
