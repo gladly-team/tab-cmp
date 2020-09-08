@@ -1,10 +1,11 @@
 /* eslint no-underscore-dangle:0 */
 
 import { setUpQuantcastChoice } from 'src/qcChoiceModified'
+import loadQCCmpModified from 'src/loadQCCmpModified'
 
 jest.mock('src/logger')
 jest.mock('src/qcChoiceModified')
-jest.mock('src/qcCmpModified')
+jest.mock('src/loadQCCmpModified')
 
 beforeEach(() => {
   window.__tcfapi = jest.fn()
@@ -74,5 +75,25 @@ describe('initCMP', () => {
     initCMP(opts)
     const initData = window.__tcfapi.mock.calls[0][3]
     expect(initData.theme.uxPrimaryButtonColor).toEqual('#FF0000')
+  })
+
+  it('calls loadQCCmpModified.js', () => {
+    expect.assertions(1)
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    initCMP(opts)
+    expect(loadQCCmpModified).toHaveBeenCalled()
+  })
+
+  it('throws if loadQCCmpModified.js throws', () => {
+    expect.assertions(1)
+    loadQCCmpModified.mockImplementationOnce(() => {
+      throw new Error('Problem.')
+    })
+    const initCMP = require('src/initCMP').default
+    const opts = getMockOptions()
+    expect(() => {
+      initCMP(opts)
+    }).toThrow('Problem.')
   })
 })

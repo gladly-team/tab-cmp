@@ -2,6 +2,7 @@
 /* eslint no-underscore-dangle:0 */
 
 import { setUpQuantcastChoice, getLanguage } from 'src/qcChoiceModified'
+import loadQCCmpModified from 'src/loadQCCmpModified'
 
 const initCMP = (options) => {
   const {
@@ -65,7 +66,7 @@ const initCMP = (options) => {
 
   // Important: the CMP JS apparently must load after the
   // initial call to __tcfapi above.
-  require('src/qcCmpModified')
+  loadQCCmpModified()
 }
 
 export default initCMP
