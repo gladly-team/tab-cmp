@@ -75,12 +75,17 @@ const initCMP = (options) => {
   try {
     loadQCCmpModified()
   } catch (e) {
+    // The QC Choice CMP async errors might be unhandled. The app's
+    // error logging likely also needs to filter out these unhelpful
+    // errors.
     const shouldIgnoreErr =
       // Ignore global vendor list errors, which are just network
       // failures.
       e.name === 'GVLError' ||
+      // Ignore browsers without localStorage access.
       (e.name === 'TypeError' &&
         e.message === "Cannot read property 'getItem' of null") ||
+      // Ignore cross-domain frame errors.
       (e.name === 'SecurityError' &&
         e.message ===
           "Failed to read the 'localStorage' property from 'Window': Access is denied for this document.")
