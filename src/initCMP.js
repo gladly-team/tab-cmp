@@ -54,7 +54,7 @@ const initCMP = (options) => {
       persistentConsentLinkLocation: 4,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'itSkgHcJApF//qeoSHAXSQ',
+      hashCode: 'klt866OJQEpWMQn5tnZBBg',
       publisherCountryCode: 'US',
       publisherName,
       vendorPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
