@@ -4,7 +4,7 @@
     const firstScript = document.getElementsByTagName('script')[0]
     cmpScriptElement.async = true
     cmpScriptElement.type = 'text/javascript'
-    const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/11/cmp2.js'
+    const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/14/cmp2.js'
     cmpScriptElement.src = cmpVersion
     window._qevents = window._qevents || []
     ;(function () {
@@ -153,7 +153,7 @@
       persistentConsentLinkLocation: 4,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'itSkgHcJApF//qeoSHAXSQ',
+      hashCode: 'klt866OJQEpWMQn5tnZBBg',
       publisherCountryCode: 'US',
       publisherName: 'LOCAL - Tab for a Cause',
       vendorPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
