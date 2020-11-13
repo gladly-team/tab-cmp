@@ -4,7 +4,7 @@
     const firstScript = document.getElementsByTagName('script')[0]
     cmpScriptElement.async = true
     cmpScriptElement.type = 'text/javascript'
-    const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/14/cmp2.js'
+    const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/22/cmp2.js'
     cmpScriptElement.src = cmpVersion
     window._qevents = window._qevents || []
     ;(function () {
@@ -130,13 +130,22 @@
     },
     theme: { uxPrimaryButtonColor: '#9d4ba3' },
     coreConfig: {
-      initScreenBodyTextOption: 1,
       consentScope: 'service',
+      thirdPartyStorageType: 'iframe',
+      consentIdentityEnabled: false,
+      initScreenBodyTextOption: 1,
+      consentOnSafari: false,
       lang_: 'en',
-      defaultToggleValue: 'off',
       displayUi: 'inEU',
-      displayPersistentConsentLink: false,
+      defaultToggleValue: 'off',
       initScreenRejectButtonShowing: false,
+      publisherConsentRestrictionIds: [],
+      publisherLIRestrictionIds: [],
+      softOptInEnabled: false,
+      showSummaryView: true,
+      persistentConsentLinkLocation: 4,
+      displayPersistentConsentLink: false,
+      uiLayout: 'popup',
       publisherLogo:
         'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
       publisherPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -145,15 +154,10 @@
       publisherFeaturesIds: [],
       publisherSpecialFeaturesIds: [],
       stacks: [1, 42],
-      softOptInEnabled: false,
-      uiLayout: 'popup',
       vendorListUpdateFreq: 90,
-      thirdPartyStorageType: 'iframe',
-      showSummaryView: true,
-      persistentConsentLinkLocation: 4,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'klt866OJQEpWMQn5tnZBBg',
+      hashCode: 'viIA/yKcUUmwj5xfSRz5eQ',
       publisherCountryCode: 'US',
       publisherName: 'LOCAL - Tab for a Cause',
       vendorPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -167,5 +171,6 @@
       uspLspact: 'N',
       suppressCcpaLinks: true,
     },
+    nonIabVendorsInfo: {},
   })
 })()
