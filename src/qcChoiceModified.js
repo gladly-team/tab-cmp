@@ -9,7 +9,7 @@ export const setUpQuantcastChoice = () => {
   const firstScript = document.getElementsByTagName('script')[0]
   // cmpScriptElement.async = true
   // cmpScriptElement.type = 'text/javascript'
-  // const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/14/cmp2.js'
+  // const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/22/cmp2.js'
   // cmpScriptElement.src = cmpVersion
   window._qevents = window._qevents || []
 
