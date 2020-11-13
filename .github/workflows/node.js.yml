@@ -3,10 +3,10 @@ name: Unit test, log code coverage, and build
 on: [push, pull_request]
 
 jobs:
-  env:
-    LOG_TEST_COVERAGE: true
   build:
     runs-on: ubuntu-latest
+    env:
+      LOG_TEST_COVERAGE: true
     steps:
     - uses: actions/checkout@v2
     - name: Run tests and build on Node
