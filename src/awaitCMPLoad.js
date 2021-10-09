@@ -4,8 +4,8 @@ import { logDebugging } from 'src/logger'
 // proxy for when the Quantcast Choice CMP has fully
 // loaded. Resolves if successful and rejects if
 // it times out.
-const awaitCMPLoad = async () => {
-  return new Promise((resolve, reject) => {
+const awaitCMPLoad = async () =>
+  new Promise((resolve, reject) => {
     logDebugging(`Polling for CMP to have loaded in updateStoredPrivacyData.`)
     const intervalMs = 500
     let timesChecked = 0
@@ -27,6 +27,5 @@ const awaitCMPLoad = async () => {
       }
     }, intervalMs)
   })
-}
 
 export default awaitCMPLoad

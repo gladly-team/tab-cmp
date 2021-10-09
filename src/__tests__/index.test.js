@@ -200,8 +200,8 @@ describe('index.js: initializeCMP', () => {
     expect.assertions(1)
     const index = require('src/index')
     await index.initializeCMP()
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     expect(updateStoredPrivacyData).toHaveBeenCalled()
   })
 

@@ -1,6 +1,4 @@
-export const isNil = (value) => {
-  return value == null
-}
+export const isNil = (value) => value == null
 
 export const getCurrentISOString = () => new Date().toISOString()
 

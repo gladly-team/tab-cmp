@@ -42,13 +42,10 @@ function ClientLocation(countryISOCode, isInEuropeanUnion, queryTime) {
  * @param {Object} err - The MaxMind error object
  * @return {Boolean} Whether we should log the MaxMind error
  */
-const shouldLogMaxMindError = (err) => {
-  return (
-    ['QUERY_FORBIDDEN', 'OUT_OF_QUERIES', 'PERMISSION_REQUIRED'].indexOf(
-      err.code
-    ) > -1
-  )
-}
+const shouldLogMaxMindError = (err) =>
+  ['QUERY_FORBIDDEN', 'OUT_OF_QUERIES', 'PERMISSION_REQUIRED'].indexOf(
+    err.code
+  ) > -1
 
 /**
  * Call MaxMind for location data and return a ClientLocation object.

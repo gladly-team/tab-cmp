@@ -3,9 +3,9 @@
  * https://github.com/facebook/jest/issues/2157
  * @return {Promise<undefined>}
  */
-export const flushAllPromises = async () => {
-  await new Promise((resolve) => setImmediate(resolve))
-}
+export const flushAllPromises = async () =>
+  // https://github.com/facebook/jest/issues/2157#issuecomment-897935688
+  new Promise(jest.requireActual('timers').setImmediate)
 
 /**
  * Flush the Promise resolution queue, then all timers, and
@@ -64,56 +64,56 @@ export const getMockTCFDataInEU = () => ({
   },
   purpose: {
     consents: {
-      '1': true,
-      '2': true,
-      '3': true,
-      '4': true,
-      '5': true,
-      '6': true,
-      '7': true,
-      '8': true,
-      '9': true,
-      '10': true,
+      1: true,
+      2: true,
+      3: true,
+      4: true,
+      5: true,
+      6: true,
+      7: true,
+      8: true,
+      9: true,
+      10: true,
     },
     legitimateInterests: {
-      '1': false,
-      '2': true,
-      '3': true,
-      '4': true,
-      '5': true,
-      '6': true,
-      '7': true,
-      '8': true,
-      '9': true,
-      '10': true,
+      1: false,
+      2: true,
+      3: true,
+      4: true,
+      5: true,
+      6: true,
+      7: true,
+      8: true,
+      9: true,
+      10: true,
     },
   },
   vendor: {
     consents: {},
     legitimateInterests: {
-      '1': false,
-      '2': true,
-      '3': false,
+      1: false,
+      2: true,
+      3: false,
       // ... etc.
     },
   },
   specialFeatureOptins: {
-    '1': true,
-    '2': true,
+    1: true,
+    2: true,
   },
   publisher: {
     consents: {},
     legitimateInterests: {
-      '1': false,
-      '2': true,
-      '3': false,
-      '4': false,
-      '5': false,
-      '6': false,
-      '7': true,
-      '8': true,
-      '9': false,
-      '10': true,
+      1: false,
+      2: true,
+      3: false,
+      4: false,
+      5: false,
+      6: false,
+      7: true,
+      8: true,
+      9: false,
+      10: true,
     },
     customPurpose: {
       consents: {},
