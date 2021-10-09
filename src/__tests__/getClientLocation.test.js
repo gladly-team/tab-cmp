@@ -78,10 +78,10 @@ afterAll(() => {
 describe('client-location: response data', () => {
   it('returns the expected set of data', async () => {
     expect.assertions(1)
-    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+    mockGeoIP.country.mockImplementationOnce((successCallback) =>
       // Mock that MaxMind says the location is Germany
-      return successCallback(getMockMaxMindResponse('DE', true))
-    })
+      successCallback(getMockMaxMindResponse('DE', true))
+    )
     const getClientLocation = require('src/getClientLocation').default
     const data = await getClientLocation()
     expect(data).toEqual({
@@ -94,10 +94,10 @@ describe('client-location: response data', () => {
 
   it('sets isInUS to true when the countryISOCode is US', async () => {
     expect.assertions(1)
-    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+    mockGeoIP.country.mockImplementationOnce((successCallback) =>
       // Mock that MaxMind says the location is Germany
-      return successCallback(getMockMaxMindResponse('US', false))
-    })
+      successCallback(getMockMaxMindResponse('US', false))
+    )
     const getClientLocation = require('src/getClientLocation').default
     const { isInUS } = await getClientLocation()
     expect(isInUS).toBe(true)
@@ -112,10 +112,10 @@ describe('client-location: response data', () => {
 
   it('returns expected value for isInEuropeanUnion when it is true (via MaxMind)', async () => {
     expect.assertions(1)
-    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+    mockGeoIP.country.mockImplementationOnce((successCallback) =>
       // Mock that MaxMind says the location is Germany
-      return successCallback(getMockMaxMindResponse('DE', true))
-    })
+      successCallback(getMockMaxMindResponse('DE', true))
+    )
     const getClientLocation = require('src/getClientLocation').default
     const { isInEuropeanUnion } = await getClientLocation()
     expect(isInEuropeanUnion).toBe(true)
@@ -157,9 +157,8 @@ describe('client-location: response data', () => {
 
     // Mock a MaxMind error
     mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        return failureCallback({ code: 'BAD_THING_HAPPENED' })
-      }
+      (successCallback, failureCallback) =>
+        failureCallback({ code: 'BAD_THING_HAPPENED' })
     )
 
     const getClientLocation = require('src/getClientLocation').default
@@ -260,10 +259,10 @@ describe('client-location: requests and storage', () => {
 
   it('stores the location result in localStorage after calling MaxMind (EU country variant)', async () => {
     expect.assertions(3)
-    mockGeoIP.country.mockImplementationOnce((successCallback) => {
+    mockGeoIP.country.mockImplementationOnce((successCallback) =>
       // Mock that MaxMind says the location is Germany
-      return successCallback(getMockMaxMindResponse('DE', true))
-    })
+      successCallback(getMockMaxMindResponse('DE', true))
+    )
     const getClientLocation = require('src/getClientLocation').default
     await getClientLocation()
 
@@ -341,9 +340,8 @@ describe('client-location: isInEuropeanUnion', () => {
 
     // Mock a MaxMind error
     mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        return failureCallback({ code: 'HTTP_TIMEOUT' })
-      }
+      (successCallback, failureCallback) =>
+        failureCallback({ code: 'HTTP_TIMEOUT' })
     )
 
     const getClientLocation = require('src/getClientLocation').default
@@ -364,9 +362,8 @@ describe('client-location: isInEuropeanUnion', () => {
 
     // Mock a MaxMind error
     mockGeoIP.country.mockImplementationOnce(
-      (successCallback, failureCallback) => {
-        return failureCallback({ code: 'OUT_OF_QUERIES' })
-      }
+      (successCallback, failureCallback) =>
+        failureCallback({ code: 'OUT_OF_QUERIES' })
     )
 
     const getClientLocation = require('src/getClientLocation').default

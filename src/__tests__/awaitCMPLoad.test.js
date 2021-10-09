@@ -1,3 +1,6 @@
+// TODO: fix eslint rule. Ignoring for now.
+/* eslint jest/no-conditional-expect: 0 */
+
 import { logDebugging } from 'src/logger'
 import { getMockTabCMPGlobal, runAsyncTimerLoops } from 'src/test-utils'
 import awaitCMPLoad from 'src/awaitCMPLoad'

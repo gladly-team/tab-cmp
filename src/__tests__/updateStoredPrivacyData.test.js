@@ -29,16 +29,16 @@ describe('updateStoredPrivacyData: CMP failure', () => {
   it('does not throw if awaitCMPLoad rejects', async () => {
     expect.assertions(1)
     awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await expect(updateStoredPrivacyData()).resolves.not.toThrow()
   })
 
   it('does not call __tcfapi or __uspapi if awaitCMPLoad rejects', async () => {
     expect.assertions(2)
     awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(window.__tcfapi).not.toHaveBeenCalled()
     expect(window.__uspapi).not.toHaveBeenCalled()
@@ -47,8 +47,8 @@ describe('updateStoredPrivacyData: CMP failure', () => {
   it('calls logDebugging if awaitCMPLoad rejects', async () => {
     expect.assertions(1)
     awaitCMPLoad.mockRejectedValue(new Error('Timed out.'))
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       `Could not update stored privacy data.`
@@ -60,16 +60,16 @@ describe('updateStoredPrivacyData: TCF', () => {
   it('does not throw if window.__tcfapi is undefined', async () => {
     expect.assertions(1)
     delete window.__tcfapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await expect(updateStoredPrivacyData()).resolves.not.toThrow()
   })
 
   it('logs an error if window.__tcfapi is undefined', async () => {
     expect.assertions(1)
     delete window.__tcfapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logError).toHaveBeenCalledWith(
       new Error(
@@ -90,8 +90,8 @@ describe('updateStoredPrivacyData: TCF', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.tcfv2.data',
@@ -111,8 +111,8 @@ describe('updateStoredPrivacyData: TCF', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.tcfv2.data',
@@ -132,8 +132,8 @@ describe('updateStoredPrivacyData: TCF', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       `Successfully updated TCF local storage data. Value:`,
@@ -153,8 +153,8 @@ describe('updateStoredPrivacyData: TCF', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update TCF local storage data. The CMP errored and provided these data:',
@@ -167,16 +167,16 @@ describe('updateStoredPrivacyData: USP', () => {
   it('does not throw if window.__uspapi is undefined', async () => {
     expect.assertions(1)
     delete window.__uspapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await expect(updateStoredPrivacyData()).resolves.not.toThrow()
   })
 
   it('logs an error if window.__uspapi is undefined', async () => {
     expect.assertions(1)
     delete window.__uspapi
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logError).toHaveBeenCalledWith(
       new Error(
@@ -205,8 +205,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.uspPing.data',
@@ -234,8 +234,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       `Successfully updated USP ping local storage data. Value:`,
@@ -263,8 +263,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.usp.data',
@@ -292,8 +292,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(localStorageMgr.setItem).toHaveBeenCalledWith(
       'tabCMP.usp.data',
@@ -318,8 +318,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Successfully updated USP local storage data. Value:',
@@ -344,8 +344,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update USP local storage data. The CMP errored.'
@@ -369,8 +369,8 @@ describe('updateStoredPrivacyData: USP', () => {
         default:
       }
     })
-    const updateStoredPrivacyData = require('src/updateStoredPrivacyData')
-      .default
+    const updateStoredPrivacyData =
+      require('src/updateStoredPrivacyData').default
     await updateStoredPrivacyData()
     expect(logDebugging).toHaveBeenCalledWith(
       'Could not update USP local storage data. The CMP errored and provided these data:',
