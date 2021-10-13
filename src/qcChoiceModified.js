@@ -5,11 +5,17 @@ export const setUpQuantcastChoice = () => {
   // First section of QC Choice JS.
   // Modified: remove script tag creation for CMP JS. We load
   // the CMP JS ourselves.
+  // const cmpFile =
+  // 'noModule' in HTMLScriptElement.prototype ? 'cmp2.js' : 'cmp2-polyfilled.js'
   // const cmpScriptElement = document.createElement('script')
-  const firstScript = document.getElementsByTagName('script')[0]
+  // const firstScript = document.getElementsByTagName('script')[0]
   // cmpScriptElement.async = true
   // cmpScriptElement.type = 'text/javascript'
-  // const cmpVersion = 'https://quantcast.mgr.consensu.org/tcfv2/22/cmp2.js'
+  // const cmpVersion =
+  // 'https://quantcast.mgr.consensu.org/tcfv2/35/CMP_FILE?referer=tab.gladly.dev'.replace(
+  //   'CMP_FILE',
+  //   cmpFile
+  // )
   // cmpScriptElement.src = cmpVersion
   window._qevents = window._qevents || []
 
@@ -26,18 +32,7 @@ export const setUpQuantcastChoice = () => {
   // Third section of QC Choice JS.
   const qcaccount = 'p-' + 'FPBLJYpJgR9Zu'
   window._qevents.push({ qacct: qcaccount, source: 'choice' })
-  const cmpNoScriptElement = document.createElement('noscript')
-  const div = document.createElement('div')
-  div.style.display = 'none;'
-  const img = document.createElement('img')
-  img.src = '//pixel.quantserve.com/pixel/p-' + 'FPBLJYpJgR9Zu' + '.gif'
-  img.border = '0'
-  img.height = '1'
-  img.width = '1'
-  img.alt = 'Quantcast'
-  div.appendChild(img)
-  cmpNoScriptElement.appendChild(div)
-  firstScript.parentNode.insertBefore(cmpNoScriptElement, firstScript)
+
   // Modified: remove script tag creation for CMP JS. We load
   // the CMP JS ourselves.
   // firstScript.parentNode.insertBefore(cmpScriptElement, firstScript)

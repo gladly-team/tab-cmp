@@ -23,22 +23,21 @@ const initCMP = (options) => {
   const language = getLanguage()
 
   window.__tcfapi('init', 2, () => {}, {
-    premiumProperties: {},
+    premiumProperties: { googleWhitelist: [1] },
     coreUiLabels: {},
     premiumUiLabels: {
       uspDnsText: [
-        '<p>This preference sets whether advertisers can personalize ads to you. Personalized ads can be more interesting and often raise more money for charity. We <strong>never</strong> sell personal information like email addresses, nor do we collect your browsing history on other sites.</p><br/><p>We and our partners use technologies to process personal information, including IP addresses and pseudonymous identifiers associated with cookies. This information is processed to personalize ads based on your interests, run and optimize marketing campaigns, measure the performance of ads and content, and derive insights about the audiences who engage with ads and content. This data is an integral part of how we raise money for non-profit partners, make revenue to support our staff, and generate relevant content for our audience. You can learn more about our data collection and use practices in our Privacy Policy.</p><br/><p>If you wish to request that your personal information is not shared with third parties, please click on the below checkbox and confirm your selection. Please note that after your opt out request is processed, we may still collect your information in order to operate our site.</p>',
+        '<p>This preference sets whether advertisers can personalize ads to you. Personalized ads can be more interesting and often raise more money for charity. We <strong>never</strong> sell personal information like email addresses, nor do we collect your browsing history on other sites.</p>\n<p>We and our partners use technologies to process personal information, including IP addresses and pseudonymous identifiers associated with cookies. This information is processed to personalize ads based on your interests, run and optimize marketing campaigns, measure the performance of ads and content, and derive insights about the audiences who engage with ads and content. This data is an integral part of how we raise money for non-profit partners, make revenue to support our staff, and generate relevant content for our audience. You can learn more about our data collection and use practices in our Privacy Policy.</p>\n<p>If you wish to request that your personal information is not shared with third parties, please click on the below checkbox and confirm your selection. Please note that after your opt out request is processed, we may still collect your information in order to operate our site.</p>',
       ],
     },
     theme: { uxPrimaryButtonColor: primaryButtonColor },
     coreConfig: {
       consentScope: 'service',
       thirdPartyStorageType: 'iframe',
-      consentIdentityEnabled: false,
-      initScreenBodyTextOption: 1,
       consentOnSafari: false,
       lang_: language,
       displayUi: 'inEU',
+      initScreenBodyTextOption: 1,
       defaultToggleValue: 'off',
       initScreenRejectButtonShowing: false,
       publisherConsentRestrictionIds: [],
@@ -49,7 +48,7 @@ const initCMP = (options) => {
       displayPersistentConsentLink,
       uiLayout: 'popup',
       publisherLogo,
-      publisherPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      publisherPurposeIds: [1, 3, 4, 5, 6, 9],
       publisherPurposeLegitimateInterestIds: [2, 7, 8, 10],
       publisherSpecialPurposesIds: [1, 2],
       publisherFeaturesIds: [],
@@ -58,7 +57,7 @@ const initCMP = (options) => {
       vendorListUpdateFreq: 90,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'viIA/yKcUUmwj5xfSRz5eQ',
+      hashCode: 'Qx0fyhosVVgZMRwlCoEJjQ',
       publisherCountryCode: 'US',
       publisherName,
       vendorPurposeIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
