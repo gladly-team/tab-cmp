@@ -88,7 +88,7 @@ This module wraps the Quantcast Choice CMP. We modify its behavior in a few ways
 
 ### How to Modify Settings or Update to a New Version
 
-Upgrading or modifying Quantcast Choice settings requires a combination of modifying the settings in the QC Choice management panel and modifying local code. Note that some of our CMP settings uses the QC Choice panel settings directly, but many settings are hardcoded locally.
+Upgrading or modifying Quantcast Choice settings requires a combination of modifying the settings in the QC Choice management panel and modifying local code. Note that some of our CMP settings use the QC Choice panel settings directly, but many settings are hardcoded locally.
 
 1. Update the `tab.gladly.dev` settings in the QC Choice management panel
 2. Update the version in the URL of the NPM script `quantcast:cmp-js:download` to match the portal version
