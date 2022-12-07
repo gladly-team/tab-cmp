@@ -599,9 +599,7 @@ describe('index.js: openTCFConsentDialog', () => {
     index.initializeCMP()
     await index.openTCFConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(
-      `Called openTCFConsentDialog.`
-    )
+    expect(logDebugging).toHaveBeenCalledWith(`Called openTCFConsentDialog.`)
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
@@ -673,9 +671,7 @@ describe('index.js: openCCPAConsentDialog', () => {
     index.initializeCMP()
     await index.openCCPAConsentDialog()
     const { logDebugging } = require('src/logger')
-    expect(logDebugging).toHaveBeenLastCalledWith(
-      `Called openCCPAConsentDialog.`
-    )
+    expect(logDebugging).toHaveBeenCalledWith(`Called openCCPAConsentDialog.`)
   })
 
   it('calls logError and does not throw if something goes wrong', async () => {
