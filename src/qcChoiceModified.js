@@ -11,11 +11,21 @@ export const setUpQuantcastChoice = () => {
   // const firstScript = document.getElementsByTagName('script')[0]
   // cmpScriptElement.async = true
   // cmpScriptElement.type = 'text/javascript'
-  // const cmpVersion =
-  // 'https://quantcast.mgr.consensu.org/tcfv2/35/CMP_FILE?referer=tab.gladly.dev'.replace(
-  //   'CMP_FILE',
-  //   cmpFile
-  // )
+  // let cmpVersion
+  // const tagUrl = document.currentScript.src
+  // if (tagUrl.includes('tag_version')) {
+  //   cmpVersion =
+  //     'https://cmp.quantcast.com/tcfv2/45/CMP_FILE?referer=tab.gladly.dev'.replace(
+  //       'CMP_FILE',
+  //       cmpFile
+  //     )
+  // } else {
+  //   cmpVersion =
+  //     'https://quantcast.mgr.consensu.org/tcfv2/45/CMP_FILE?referer=tab.gladly.dev'.replace(
+  //       'CMP_FILE',
+  //       cmpFile
+  //     )
+  // }
   // cmpScriptElement.src = cmpVersion
   window._qevents = window._qevents || []
 
@@ -38,9 +48,8 @@ export const setUpQuantcastChoice = () => {
   // firstScript.parentNode.insertBefore(cmpScriptElement, firstScript)
 
   // Fourth section of QC Choice JS.
-  let css = ''
-  // eslint-disable-next-line no-unused-expressions
-  '' +
+  let css =
+    '' +
     ' .qc-cmp-button { ' +
     '   background-color: #9d4ba3 !important; ' +
     '   border-color: #9d4ba3 !important; ' +
