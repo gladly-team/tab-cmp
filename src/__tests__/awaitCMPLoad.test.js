@@ -64,6 +64,9 @@ describe('awaitCMPLoad', () => {
 
   it('calls logDebugging as expected when the CMP responds successfully', async () => {
     expect.assertions(2)
+
+    // Promise is returned below.
+    // eslint-disable-next-line jest/valid-expect-in-promise
     const promise = awaitCMPLoad()
       .then(() => {
         expect(logDebugging).toHaveBeenCalledWith(
