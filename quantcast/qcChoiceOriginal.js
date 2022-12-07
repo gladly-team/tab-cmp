@@ -6,11 +6,21 @@
     const firstScript = document.getElementsByTagName('script')[0]
     cmpScriptElement.async = true
     cmpScriptElement.type = 'text/javascript'
-    const cmpVersion =
-      'https://quantcast.mgr.consensu.org/tcfv2/35/CMP_FILE?referer=tab.gladly.dev'.replace(
-        'CMP_FILE',
-        cmpFile
-      )
+    let cmpVersion
+    const tagUrl = document.currentScript.src
+    if (tagUrl.includes('tag_version')) {
+      cmpVersion =
+        'https://cmp.quantcast.com/tcfv2/45/CMP_FILE?referer=tab.gladly.dev'.replace(
+          'CMP_FILE',
+          cmpFile
+        )
+    } else {
+      cmpVersion =
+        'https://quantcast.mgr.consensu.org/tcfv2/45/CMP_FILE?referer=tab.gladly.dev'.replace(
+          'CMP_FILE',
+          cmpFile
+        )
+    }
     cmpScriptElement.src = cmpVersion
     window._qevents = window._qevents || []
     ;(function () {
@@ -30,8 +40,8 @@
     firstScript.parentNode.insertBefore(cmpScriptElement, firstScript)
   })()
   ;(function () {
-    let css = ''
-    '' +
+    let css =
+      '' +
       ' .qc-cmp-button { ' +
       '   background-color: #9d4ba3 !important; ' +
       '   border-color: #9d4ba3 !important; ' +
@@ -115,42 +125,14 @@
   }
   const choiceMilliSeconds = new Date().getTime()
   window.__tcfapi('init', 2, () => {}, {
-    premiumProperties: { googleWhitelist: [1] },
-    coreUiLabels: {},
-    premiumUiLabels: {
-      uspDnsText: [
-        '<p>This preference sets whether advertisers can personalize ads to you. Personalized ads can be more interesting and often raise more money for charity. We <strong>never</strong> sell personal information like email addresses, nor do we collect your browsing history on other sites.</p>\n<p><br></p>\n<p>We and our partners use technologies to process personal information, including IP addresses and pseudonymous identifiers associated with cookies. This information is processed to personalize ads based on your interests, run and optimize marketing campaigns, measure the performance of ads and content, and derive insights about the audiences who engage with ads and content. This data is an integral part of how we raise money for non-profit partners, make revenue to support our staff, and generate relevant content for our audience. You can learn more about our data collection and use practices in our Privacy Policy.</p>\n<p><br></p>\n<p>If you wish to request that your personal information is not shared with third parties, please click on the below checkbox and confirm your selection. Please note that after your opt out request is processed, we may still collect your information in order to operate our site.</p>',
-      ],
-    },
-    theme: { uxPrimaryButtonColor: '#9d4ba3' },
     coreConfig: {
-      consentScope: 'service',
-      thirdPartyStorageType: 'iframe',
-      consentOnSafari: false,
-      lang_: 'en',
-      displayUi: 'inEU',
-      initScreenBodyTextOption: 1,
-      defaultToggleValue: 'off',
-      initScreenRejectButtonShowing: false,
-      publisherConsentRestrictionIds: [],
-      publisherLIRestrictionIds: [],
-      softOptInEnabled: false,
-      showSummaryView: true,
-      persistentConsentLinkLocation: 4,
-      displayPersistentConsentLink: false,
-      uiLayout: 'popup',
-      publisherLogo:
-        'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg',
-      publisherPurposeIds: [1, 3, 4, 5, 6, 9],
-      publisherPurposeLegitimateInterestIds: [2, 7, 8, 10],
-      publisherSpecialPurposesIds: [1, 2],
-      publisherFeaturesIds: [],
-      publisherSpecialFeaturesIds: [],
-      stacks: [1, 42],
-      vendorListUpdateFreq: 90,
+      uspVersion: 1,
+      uspJurisdiction: ['US'],
+      uspLspact: 'N',
+      suppressCcpaLinks: true,
       quantcastAccountId: 'FPBLJYpJgR9Zu',
       privacyMode: ['GDPR', 'USP'],
-      hashCode: 'r4Yq4GlcC8fElXrt+v/1AA',
+      hashCode: 'Bcs4M7M8CV2LjRCXFQPZCQ',
       publisherCountryCode: 'US',
       publisherName: 'LOCAL - Tab for a Cause',
       vendorPurposeIds: [2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
@@ -159,11 +141,37 @@
       vendorSpecialFeaturesIds: [1, 2],
       vendorSpecialPurposesIds: [1, 2],
       googleEnabled: true,
-      uspVersion: 1,
-      uspJurisdiction: ['US'],
-      uspLspact: 'N',
-      suppressCcpaLinks: true,
+      consentScope: 'service',
+      thirdPartyStorageType: 'iframe',
+      consentOnSafari: false,
+      displayUi: 'inEU',
+      defaultToggleValue: 'off',
+      initScreenRejectButtonShowing: false,
+      softOptInEnabled: false,
+      showSummaryView: true,
+      persistentConsentLinkLocation: 4,
+      displayPersistentConsentLink: false,
+      uiLayout: 'popup',
+      publisherLogo:
+        'https://tab.gladly.io/static/logo-with-text-257bbffc6dcac5076e8ac31eed8ff73c.svg?qc-size=600,216',
+      vendorListUpdateFreq: 90,
+      publisherPurposeIds: [1, 3, 4, 5, 6, 9],
+      initScreenBodyTextOption: 1,
+      publisherConsentRestrictionIds: [],
+      publisherLIRestrictionIds: [],
+      publisherPurposeLegitimateInterestIds: [2, 7, 8, 10],
+      publisherSpecialPurposesIds: [1, 2],
+      stacks: [1, 42],
+      lang_: 'en',
     },
+    premiumUiLabels: {
+      uspDnsText: [
+        '<p>This preference sets whether advertisers can personalize ads to you. Personalized ads can be more interesting and often raise more money for charity. We <strong>never</strong> sell personal information like email addresses, nor do we collect your browsing history on other sites.</p>\n<p><br></p>\n<p>We and our partners use technologies to process personal information, including IP addresses and pseudonymous identifiers associated with cookies. This information is processed to personalize ads based on your interests, run and optimize marketing campaigns, measure the performance of ads and content, and derive insights about the audiences who engage with ads and content. This data is an integral part of how we raise money for non-profit partners, make revenue to support our staff, and generate relevant content for our audience. You can learn more about our data collection and use practices in our Privacy Policy.</p>\n<p><br></p>\n<p>If you wish to request that your personal information is not shared with third parties, please click on the below checkbox and confirm your selection. Please note that after your opt out request is processed, we may still collect your information in order to operate our site.</p>',
+      ],
+    },
+    premiumProperties: { googleWhitelist: [1] },
+    coreUiLabels: {},
+    theme: { uxPrimaryButtonColor: '#9d4ba3' },
     nonIabVendorsInfo: {},
   })
 })()
