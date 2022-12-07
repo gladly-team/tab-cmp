@@ -69,6 +69,7 @@ export const setUpQuantcastChoice = () => {
     '' +
     ''
   const stylesElement = document.createElement('style')
+  // eslint-disable-next-line prefer-regex-literals
   const re = new RegExp('&quote;', 'g')
   css = css.replace(re, '"')
   stylesElement.type = 'text/css'

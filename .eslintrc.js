@@ -38,5 +38,8 @@ module.exports = {
     react: {
       version: 'latest',
     },
+    react: {
+      version: '18',
+    },
   },
 }
